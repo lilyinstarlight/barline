@@ -2,7 +2,7 @@
 
 #include "util.h"
 
-void format_unit(char * str, size_t size, int val, const char ** units, size_t units_size) {
+void format_unit(char * buf, size_t size, int val, const char ** units, size_t units_size) {
 	float fval;
 	int num;
 	int idx;
@@ -17,5 +17,5 @@ void format_unit(char * str, size_t size, int val, const char ** units, size_t u
 		idx++;
 	}
 
-	snprintf(str, size, "%.1f %s", fval, units[idx]);
+	snprintf(buf, size, "%.1f %s", fval, units[idx]);
 }

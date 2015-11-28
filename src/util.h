@@ -2,5 +2,5 @@
 #define UTIL_H
 #include <stddef.h>
 
-void format_unit(char * str, size_t size, int val, const char ** units, size_t units_size);
+void format_unit(char * buf, size_t size, int val, const char ** units, size_t units_size);
 #endif
