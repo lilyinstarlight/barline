@@ -7,6 +7,8 @@ void format_unit(char * str, size_t size, int val, const char ** units, size_t u
 	int num;
 	int idx;
 
+	fval = val;
+
 	num = units_size/sizeof(const char *);
 	idx = 0;
 
@@ -15,5 +17,5 @@ void format_unit(char * str, size_t size, int val, const char ** units, size_t u
 		idx++;
 	}
 
-	snprintf(str, "%.1f %s", fval, units[idx]);
+	snprintf(str, size, "%.1f %s", fval, units[idx]);
 }
