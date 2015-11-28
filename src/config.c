@@ -4,6 +4,8 @@
 
 #include "config.h"
 
+config_t config_default = { .format = "", .interval = 1 };
+
 config_t * config_load(const char * filename) {
 	FILE * file;
 	int line;
@@ -14,10 +16,15 @@ config_t * config_load(const char * filename) {
 
 	config_t * config;
 
-	config = malloc(sizeof(config_t));
-	memset(config, 0, sizeof(config_t));
-
 	file = fopen(filename, "r");
+
+	if(file == NULL) {
+		fprintf(stderr, "error: cannot load configuration file (%s)\n", filename);
+		return NULL;
+	}
+
+	config = malloc(sizeof(config_t));
+	memcpy(config, &config_default, sizeof(config_t));
 
 	line = 0;
 	while(!feof(file)) {
@@ -25,7 +32,9 @@ config_t * config_load(const char * filename) {
 
 		line++;
 
-		if(ret != 2) {
+		if(ret == EOF)
+			break;
+		else if(ret != 2) {
 			fscanf(file, "%*[^\n]");
 			fprintf(stderr, "warning: invalid syntax (line %d) ignored\n", line);
 			continue;
@@ -36,8 +45,13 @@ config_t * config_load(const char * filename) {
 				config->format = malloc(strlen(buf));
 				strcpy(config->format, buf);
 				break;
+			case 'i':
+				ret = sscanf(buf, "%u", &(config->interval));
+				if(ret != 1)
+					fprintf(stderr, "warning: invalid interval (%s) ignored\n", buf);
+				break;
 			default:
-				fprintf(stderr, "warning: unknown configuration option (%s) ignored\n", option);
+				fprintf(stderr, "warning: invalid configuration option (%s) ignored\n", option);
 				break;
 		}
 	}
