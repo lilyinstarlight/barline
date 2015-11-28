@@ -33,14 +33,14 @@ int getcore(int core) {
 
 	int percent;
 
-	if(core != -1 && core >= (int)(sizeof(cores)/sizeof(struct core)))
+	if(core >= (int)(sizeof(cores)/sizeof(struct core)))
 		return -1;
 
 	file = fopen("/proc/stat", "r");
 	if(file == NULL)
 		return -1;
 
-	if(core == -1)
+	if(core < 0)
 		snprintf(ref, sizeof(ref), "cpu");
 	else
 		snprintf(ref, sizeof(ref), "cpu%d", core);
@@ -146,7 +146,7 @@ int getvol(const char * card, const char * selement) {
 #endif
 int getwlan(const char * iface, char * ssid, size_t size) {
 	int iwsock;
-	struct iwreq iwr;
+	struct iwreq iwreq;
 	int ret;
 
 	iwsock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -154,16 +154,16 @@ int getwlan(const char * iface, char * ssid, size_t size) {
 	if(iwsock < 0)
 		return -1;
 
-	strncpy(iwr.ifr_name, iface, IFNAMSIZ);
-	iwr.u.essid.pointer = ssid;
-	iwr.u.essid.length = size - 1;
+	strncpy(iwreq.ifr_name, iface, IFNAMSIZ);
+	iwreq.u.essid.pointer = ssid;
+	iwreq.u.essid.length = size - 1;
 
-	ret = ioctl(iwsock, SIOCGIWESSID, &iwr);
+	ret = ioctl(iwsock, SIOCGIWESSID, &iwreq);
 
 	if(ret < 0)
 		return -1;
 
-	ssid[iwr.u.essid.length] = '\0';
+	ssid[iwreq.u.essid.length] = '\0';
 
 	return 0;
 }
