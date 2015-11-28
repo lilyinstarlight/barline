@@ -2,8 +2,10 @@
 #include <unistd.h>
 
 #include "config.h"
+#include "format.h"
 
 int main(void) {
+	char buf[256];
 	config_t * config;
 
 	config = config_load("barlinerc");
@@ -11,7 +13,9 @@ int main(void) {
 	if(config == NULL)
 		return 1;
 
-	for(;; sleep(config->interval)) {
-		printf("%s\n", config->format);
+	while(1) {
+		format(buf, sizeof(buf), config->format);
+		puts(buf);
+		sleep(config->interval);
 	}
 }
