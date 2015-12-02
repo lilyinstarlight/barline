@@ -8,12 +8,9 @@
 
 #include <linux/wireless.h>
 
-#ifdef ALSA
 #include <alloca.h>
 
 #include <alsa/asoundlib.h>
-
-#endif
 
 #include "data.h"
 
@@ -108,7 +105,6 @@ int getmem() {
 	return total - available;
 }
 
-#ifdef ALSA
 int getvol(const char * card, const char * selement) {
 	snd_mixer_t * mixer;
 	snd_mixer_selem_id_t * sid;
@@ -143,7 +139,6 @@ int getvol(const char * card, const char * selement) {
 	return vol * 100 / max + !mute * 1000;
 }
 
-#endif
 int getwlan(const char * iface, char * ssid, size_t size) {
 	int iwsock;
 	struct iwreq iwreq;
@@ -164,6 +159,8 @@ int getwlan(const char * iface, char * ssid, size_t size) {
 		return -1;
 
 	ssid[iwreq.u.essid.length] = '\0';
+
+	close(iwsock);
 
 	return 0;
 }
