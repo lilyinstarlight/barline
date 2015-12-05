@@ -14,9 +14,9 @@ int main(void) {
 
 	dir = getenv("XDG_CONFIG_HOME");
 	if(dir != NULL)
-		snprintf(filename, sizeof(filename), "%s/barline/barlinerc", dir);
+		snprintf(fname, sizeof(fname), "%s/barline/barlinerc", dir);
 	else
-		snprintf(filename, sizeof(filename), "%s/.config/barline/barlinerc", getenv("HOME"));
+		snprintf(fname, sizeof(fname), "%s/.config/barline/barlinerc", getenv("HOME"));
 
 	config = config_load(fname);
 
