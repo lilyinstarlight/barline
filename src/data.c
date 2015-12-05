@@ -18,7 +18,7 @@ struct core {
 	unsigned long long user, userlow, sys, idle, total;
 };
 
-struct core cores[16];
+struct core cores[CORE_MAX + 1];
 
 int getcore(int core) {
 	FILE * file;
@@ -30,7 +30,7 @@ int getcore(int core) {
 
 	int percent;
 
-	if(core >= (int)(sizeof(cores)/sizeof(struct core)))
+	if(core > CORE_MAX)
 		return -1;
 
 	file = fopen("/proc/stat", "r");
@@ -214,7 +214,7 @@ int getbatt(const char * batt) {
 	if(ret != 1)
 		return -1;
 
-	charging = !strcmp(status, "Charging");
+	charging = strcmp(status, "Charging") == 0;
 
 	return now * 100 / full + charging * 1000;
 }

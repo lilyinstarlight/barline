@@ -2,7 +2,9 @@
 #define DATA_H
 #include <stddef.h>
 
-int getcore(int cpu);
+#define CORE_MAX 15
+
+int getcore(int core);
 int gettemp(const char * thermal);
 int getmem();
 int getvol(const char * card, const char * selement);
