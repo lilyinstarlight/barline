@@ -20,6 +20,7 @@ const char * time_fmt = "%R";
 
 void format(char * buf, size_t size, const char * format) {
 	size_t idx;
+	size_t last;
 	size_t len;
 	int ret;
 	char cmd;
@@ -66,9 +67,9 @@ void format(char * buf, size_t size, const char * format) {
 
 			end = strchr(format + idx, '}');
 			if(end == NULL)
-				idx = len;
+				last = len - 1;
 			else
-				idx = end - format;
+				last = end - format;
 
 			if(ret != 2) {
 				fprintf(stderr, "warning: invalid syntax in format string ignored");
@@ -161,7 +162,12 @@ void format(char * buf, size_t size, const char * format) {
 						snprintf(buf + idx, size - 1 - idx, "%s", "none");
 
 					break;
+				default:
+					memcpy(buf + idx, format + idx, last - idx);
+					break;
 			}
+
+			idx = last;
 		}
 		else {
 			buf[idx] = format[idx];
