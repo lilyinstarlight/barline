@@ -23,6 +23,8 @@ int main(void) {
 
 	char buf[256];
 
+	setvbuf(stdout, NULL, _IOLBF, 0);
+
 	dir = getenv("XDG_CONFIG_HOME");
 	if(dir != NULL)
 		snprintf(fname, sizeof(fname), "%s/barline/barlinerc", dir);
@@ -40,7 +42,7 @@ int main(void) {
 
 	while(run) {
 		format(buf, sizeof(buf), config->format);
-		puts(buf);
+		run = puts(buf) > 0;
 		sleep(config->interval);
 	}
 
