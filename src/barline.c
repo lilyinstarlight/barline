@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -5,12 +6,22 @@
 #include "config.h"
 #include "format.h"
 
-int main(void) {
-	char buf[256];
+char fname[256];
+config_t * config;
 
+int run;
+
+void reload_config(int signum) {
+	(void)signum;
+
+	config_free(config);
+	config = config_load(fname);
+}
+
+int main(void) {
 	char * dir;
-	char fname[256];
-	config_t * config;
+
+	char buf[256];
 
 	dir = getenv("XDG_CONFIG_HOME");
 	if(dir != NULL)
@@ -23,9 +34,15 @@ int main(void) {
 	if(config == NULL)
 		return 1;
 
-	while(1) {
+	run = 1;
+
+	signal(SIGUSR1, reload_config);
+
+	while(run) {
 		format(buf, sizeof(buf), config->format);
 		puts(buf);
 		sleep(config->interval);
 	}
+
+	config_free(config);
 }
