@@ -147,7 +147,7 @@ int getwlan(const char * iface, char * ssid, size_t size) {
 	iwsock = socket(AF_INET, SOCK_DGRAM, 0);
 
 	if(iwsock < 0)
-		return -1;
+		return -2;
 
 	strncpy(iwreq.ifr_name, iface, IFNAMSIZ);
 	iwreq.u.essid.pointer = ssid;
@@ -156,13 +156,17 @@ int getwlan(const char * iface, char * ssid, size_t size) {
 	ret = ioctl(iwsock, SIOCGIWESSID, &iwreq);
 
 	if(ret < 0)
-		return -1;
+		ret = -1;
+	else if(iwreq.u.essid.length == 0)
+		ret = 1;
+	else
+		ret = 0;
 
 	ssid[iwreq.u.essid.length] = '\0';
 
 	close(iwsock);
 
-	return 0;
+	return ret;
 }
 
 int getbatt(const char * batt) {
