@@ -4,7 +4,7 @@
 
 #include "config.h"
 
-config_t config_default = { .format = "", .interval = 1 };
+config_t config_default = { .format = "no format in config", .interval = 1 };
 
 config_t * config_load(const char * filename) {
 	FILE * file;
