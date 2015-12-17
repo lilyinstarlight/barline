@@ -43,7 +43,7 @@ int getcore(int core) {
 		snprintf(ref, sizeof(ref), "cpu%d", core);
 
 	do
-		ret = fscanf(file, "%11s %llu %llu %llu %llu %*[^\n]\n", name, &user, &userlow, &sys, &idle);
+		ret = fscanf(file, "%11s %llu %llu %llu %llu %*[^\n]", name, &user, &userlow, &sys, &idle);
 	while(strcmp(name, ref) != 0 && ret != EOF);
 
 	fclose(file);
@@ -75,7 +75,7 @@ int gettemp(const char * thermal) {
 	if(file == NULL)
 		return -1;
 
-	ret = fscanf(file, "%d\n", &temp);
+	ret = fscanf(file, "%d", &temp);
 
 	fclose(file);
 
@@ -185,7 +185,7 @@ int getbatt(const char * batt) {
 	if(file == NULL)
 		return - 1;
 
-	ret = fscanf(file, "%ld\n", &full);
+	ret = fscanf(file, "%ld", &full);
 
 	fclose(file);
 
@@ -198,7 +198,7 @@ int getbatt(const char * batt) {
 	if(file == NULL)
 		return -1;
 
-	ret = fscanf(file, "%ld\n", &now);
+	ret = fscanf(file, "%ld", &now);
 
 	fclose(file);
 
@@ -211,7 +211,7 @@ int getbatt(const char * batt) {
 	if(file == NULL)
 		return -1;
 
-	ret = fscanf(file, "%11s\n", status);
+	ret = fscanf(file, "%11s", status);
 
 	fclose(file);
 
