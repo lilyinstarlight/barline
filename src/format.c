@@ -160,9 +160,9 @@ void format(char * buf, size_t size, const char * format) {
 
 					batt = getbatt(power);
 					if(batt / 1000)
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "^%d %%", batt % 101);
+						bidx += snprintf(buf + bidx, size - 1 - bidx, "^%d %%", batt - 1000);
 					else
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "%d %%", batt % 101);
+						bidx += snprintf(buf + bidx, size - 1 - bidx, "%d %%", batt);
 
 					break;
 				case 'D':
