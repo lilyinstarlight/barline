@@ -11,6 +11,12 @@ config_t * config;
 
 int run;
 
+void terminate(int signum) {
+	(void)signum;
+
+	run = 0;
+}
+
 void reload_config(int signum) {
 	(void)signum;
 
@@ -38,11 +44,18 @@ int main(void) {
 
 	run = 1;
 
+	signal(SIGINT, terminate);
+	signal(SIGTERM, terminate);
+	signal(SIGPIPE, terminate);
+
 	signal(SIGUSR1, reload_config);
 
 	while(run) {
 		format(buf, sizeof(buf), config->format);
-		run = puts(buf) > 0;
+
+		if(puts(buf) < 0)
+			run = 0;
+
 		sleep(config->interval);
 	}
 
