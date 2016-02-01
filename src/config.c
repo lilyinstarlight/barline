@@ -42,7 +42,7 @@ config_t * config_load(const char * filename) {
 
 		switch(option[0]) {
 			case 'f':
-				config->format = malloc(strlen(buf));
+				config->format = malloc(strlen(buf) + 1);
 				strcpy(config->format, buf);
 				break;
 			case 'i':

@@ -18,7 +18,7 @@ struct core {
 	unsigned long long user, userlow, sys, idle, total;
 };
 
-struct core cores[CORE_MAX + 1];
+struct core cores[CORE_MAX + 2];
 
 int getcore(int core) {
 	FILE * file;
@@ -50,6 +50,8 @@ int getcore(int core) {
 
 	if(ret != 5)
 		return -1;
+
+	core++;
 
 	total = (user - cores[core].user) + (userlow - cores[core].userlow) + (sys - cores[core].sys);
 	percent = total * 100 / (total + idle - cores[core].idle);
