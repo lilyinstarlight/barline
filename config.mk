@@ -1,4 +1,4 @@
-NAME=barline
+BIN=barline
 
 SRC=barline.c config.c data.c format.c util.c
 

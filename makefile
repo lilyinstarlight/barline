@@ -3,19 +3,19 @@ include config.mk
 SOURCES=$(addprefix $(SRCDIR)/,$(SRC))
 OBJECTS=$(SOURCES:.c=.o)
 
-all: $(NAME)
+all: $(BIN)
 
 install: all
-	install -D -s $(NAME) $(BINDIR)/$(NAME)
+	install -D -s $(BIN) $(BINDIR)/$(BIN)
 
 uninstall:
-	-rm -f $(BINDIR)/$(NAME)
+	-rm -f $(BINDIR)/$(BIN)
 
 clean:
 	-rm -f $(OBJECTS)
-	-rm -f $(NAME)
+	-rm -f $(BIN)
 
-$(NAME): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(NAME) $(LDLIBS) $(OBJECTS)
+$(BIN): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $(BIN) $(LDLIBS) $(OBJECTS)
 
 .PHONY: all install uninstall clean
