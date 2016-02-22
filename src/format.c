@@ -98,7 +98,7 @@ void format(char * buf, size_t size, const char * format) {
 						}
 					}
 
-					core = getcore(coreid);
+					core = get_core(coreid);
 					bidx += snprintf(buf + bidx, size - 1 - bidx, "%d %%", core);
 
 					break;
@@ -106,12 +106,12 @@ void format(char * buf, size_t size, const char * format) {
 					if(*args != '\0')
 						thermal = args;
 
-					temp = gettemp(thermal);
+					temp = get_temp(thermal);
 					bidx += snprintf(buf + bidx, size - 1 - bidx, "%d °C", temp);
 
 					break;
 				case 'M':
-					mem = getmem();
+					mem = get_mem();
 					bidx += format_unit(buf + bidx, size - 1 - bidx, mem, mem_units, sizeof(mem_units));
 
 					break;
@@ -130,7 +130,7 @@ void format(char * buf, size_t size, const char * format) {
 						}
 					}
 
-					vol = getvol(card, selement);
+					vol = get_vol(card, selement);
 					if(vol / 1000)
 						bidx += snprintf(buf + bidx, size - 1 - bidx, "%s", mutestr);
 					else
@@ -147,7 +147,7 @@ void format(char * buf, size_t size, const char * format) {
 							offstr = arg + 1;
 					}
 
-					off = getwlan(iface, ssid, sizeof(ssid));
+					off = get_wlan(iface, ssid, sizeof(ssid));
 					if(off)
 						bidx += snprintf(buf + bidx, size - 1 - bidx, "%s", offstr);
 					else
@@ -158,7 +158,7 @@ void format(char * buf, size_t size, const char * format) {
 					if(*args != '\0')
 						power = args;
 
-					batt = getbatt(power);
+					batt = get_batt(power);
 					if(batt / 1000)
 						bidx += snprintf(buf + bidx, size - 1 - bidx, "^%d %%", batt - 1000);
 					else
@@ -175,7 +175,7 @@ void format(char * buf, size_t size, const char * format) {
 							fmt = arg + 1;
 					}
 
-					bad = gettime(time, sizeof(time), fmt, tz);
+					bad = get_time(time, sizeof(time), fmt, tz);
 					if(bad)
 						bidx += snprintf(buf + bidx, size - 1 - bidx, "%s", "none");
 					else
