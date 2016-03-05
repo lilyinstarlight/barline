@@ -20,7 +20,7 @@ struct core {
 
 struct core cores[CORE_MAX + 2];
 
-int getcore(int core) {
+int get_core(int core) {
 	FILE * file;
 	char ref[12];
 	int ret;
@@ -64,7 +64,7 @@ int getcore(int core) {
 	return percent;
 }
 
-int gettemp(const char * thermal) {
+int get_temp(const char * thermal) {
 	FILE * file;
 	char path[64];
 	int ret;
@@ -87,7 +87,7 @@ int gettemp(const char * thermal) {
 	return temp / 1000;
 }
 
-int getmem() {
+int get_mem() {
 	FILE * file;
 	int ret;
 
@@ -107,7 +107,7 @@ int getmem() {
 	return total - available;
 }
 
-int getvol(const char * card, const char * selement) {
+int get_vol(const char * card, const char * selement) {
 	snd_mixer_t * mixer;
 	snd_mixer_selem_id_t * sid;
 	snd_mixer_elem_t * element;
@@ -141,7 +141,7 @@ int getvol(const char * card, const char * selement) {
 	return vol * 100 / max + !mute * 1000;
 }
 
-int getwlan(const char * iface, char * ssid, size_t size) {
+int get_wlan(const char * iface, char * ssid, size_t size) {
 	int iwsock;
 	struct iwreq iwreq;
 	int ret;
@@ -171,7 +171,7 @@ int getwlan(const char * iface, char * ssid, size_t size) {
 	return ret;
 }
 
-int getbatt(const char * batt) {
+int get_batt(const char * batt) {
 	FILE * file;
 	char path[64];
 	int ret;
@@ -225,7 +225,7 @@ int getbatt(const char * batt) {
 	return now * 100 / full + charging * 1000;
 }
 
-int gettime(char * buf, size_t size, const char * fmt, const char * tz) {
+int get_time(char * buf, size_t size, const char * fmt, const char * tz) {
 	time_t rtime;
 	struct tm * itime;
 
