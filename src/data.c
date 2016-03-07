@@ -23,6 +23,7 @@ struct core cores[CORE_MAX + 2];
 int get_core(int core) {
 	FILE * file;
 	char ref[12];
+
 	int ret;
 
 	char name[12];
@@ -67,6 +68,7 @@ int get_core(int core) {
 int get_temp(const char * thermal) {
 	FILE * file;
 	char path[64];
+
 	int ret;
 
 	int temp;
@@ -89,6 +91,7 @@ int get_temp(const char * thermal) {
 
 int get_mem() {
 	FILE * file;
+
 	int ret;
 
 	int total, available;
@@ -144,6 +147,7 @@ int get_vol(const char * card, const char * selement) {
 int get_wlan(const char * iface, char * ssid, size_t size) {
 	int iwsock;
 	struct iwreq iwreq;
+
 	int ret;
 
 	iwsock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -174,6 +178,7 @@ int get_wlan(const char * iface, char * ssid, size_t size) {
 int get_batt(const char * batt) {
 	FILE * file;
 	char path[64];
+
 	int ret;
 
 	char status[12];
