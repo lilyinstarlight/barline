@@ -20,8 +20,15 @@ void terminate(int signum) {
 void reload_config(int signum) {
 	(void)signum;
 
+	config_t * config_new;
+
+	config_new = config_load(fname);
+	if(config_new == NULL)
+		return;
+
 	config_free(config);
-	config = config_load(fname);
+
+	config = config_new;
 }
 
 int main(void) {
