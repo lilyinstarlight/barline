@@ -2,7 +2,6 @@
 #include <string.h>
 
 #include "data.h"
-#include "util.h"
 
 #include "format.h"
 
@@ -24,6 +23,157 @@ const char * batt_power = "BAT0";
 const char * time_tz = "UTC";
 const char * time_fmt = "%R";
 
+int format_unit(char * buf, size_t size, int val, const char ** units, size_t units_size) {
+	float fval;
+	int num;
+	int idx;
+
+	fval = val;
+
+	num = units_size/sizeof(const char *);
+	idx = 0;
+
+	while(fval > 896 && idx < num) {
+		fval /= 1024;
+		idx++;
+	}
+
+	return snprintf(buf, size, "%.1f %s", fval, units[idx]);
+}
+
+int format_core(char * buf, size_t size, const char * args) {
+	int id = core_id;
+	int core;
+
+	int ret;
+
+	if(*args != '\0') {
+		ret = sscanf(args, "%d", &id);
+		if(ret != 1) {
+			fprintf(stderr, "warning: invalid core id (%s) ignored", args);
+			return 0;
+		}
+	}
+
+	core = get_core(id);
+
+	return snprintf(buf, size, "%d %%", core);
+}
+
+int format_temp(char * buf, size_t size, const char * args) {
+	const char * thermal = temp_thermal;
+	int temp;
+
+	if(*args != '\0')
+		thermal = args;
+
+	temp = get_temp(thermal);
+
+	return snprintf(buf, size, "%d °C", temp);
+}
+
+int format_mem(char * buf, size_t size, const char * args) {
+	(void)args;
+
+	int mem;
+
+	mem = get_mem();
+
+	return format_unit(buf, size, mem, mem_units, sizeof(mem_units));
+}
+
+int format_vol(char * buf, size_t size, const char * args) {
+	const char * card = vol_card, * selement = vol_selement, * mutestr = vol_mutestr;
+	int vol;
+
+	const char * arg;
+
+	arg = args;
+	if(*arg != '\0') {
+		card = arg;
+
+		arg = strchr(arg, ':');
+		if(arg != NULL) {
+			selement = arg + 1;
+
+			arg = strchr(arg + 1, ':');
+			if(arg != NULL)
+				mutestr = arg + 1;
+		}
+	}
+
+	vol = get_vol(card, selement);
+
+	if(vol / 1000)
+		return snprintf(buf, size, "%s", mutestr);
+	else
+		return snprintf(buf, size, "%d %%", vol);
+}
+
+int format_wlan(char * buf, size_t size, const char * args) {
+	const char * iface = wlan_iface, * offstr = wlan_offstr;
+	char ssid[32];
+	int off;
+
+	const char * arg;
+
+	arg = args;
+	if(*arg != '\0') {
+		iface = arg;
+
+		arg = strchr(arg, ':');
+		if(arg != NULL)
+			offstr = arg + 1;
+	}
+
+	off = get_wlan(iface, ssid, sizeof(ssid));
+
+	if(off)
+		return snprintf(buf, size, "%s", offstr);
+	else
+		return snprintf(buf, size, "%s", ssid);
+
+}
+
+int format_batt(char * buf, size_t size, const char * args) {
+	const char * power = batt_power;
+	int batt;
+
+	if(*args != '\0')
+		power = args;
+
+	batt = get_batt(power);
+
+	if(batt / 1000)
+		return snprintf(buf, size, "^%d %%", batt - 1000);
+	else
+		return snprintf(buf, size, "%d %%", batt);
+}
+
+int format_time(char * buf, size_t size, const char * args) {
+	const char * tz = time_tz, * fmt = time_fmt;
+	char time[32];
+	int bad;
+
+	const char * arg;
+
+	arg = args;
+	if(*arg != '\0') {
+		tz = arg;
+
+		arg = strchr(arg, ':');
+		if(arg != NULL)
+			fmt = arg + 1;
+	}
+
+	bad = get_time(time, sizeof(time), fmt, tz);
+
+	if(bad)
+		return snprintf(buf, size, "%s", "none");
+	else
+		return snprintf(buf, size, "%s", time);
+}
+
 void format(char * buf, size_t size, const char * format) {
 	size_t fidx;
 	size_t bidx;
@@ -34,36 +184,6 @@ void format(char * buf, size_t size, const char * format) {
 	char args[64];
 
 	char * end;
-	char * arg;
-
-	//core
-	int coreid = core_id;
-	int core;
-
-	//temp
-	const char * thermal = temp_thermal;
-	int temp;
-
-	//mem
-	int mem;
-
-	//vol
-	const char * card = vol_card, * selement = vol_selement, * mutestr = vol_mutestr;
-	int vol;
-
-	//wlan
-	const char * iface = wlan_iface, * offstr = wlan_offstr;
-	char ssid[32];
-	int off;
-
-	//batt
-	const char * power = batt_power;
-	int batt;
-
-	//time
-	const char * tz = time_tz, * fmt = time_fmt;
-	char time[32];
-	int bad;
 
 	len = strlen(format);
 
@@ -90,97 +210,25 @@ void format(char * buf, size_t size, const char * format) {
 
 			switch(cmd) {
 				case 'C':
-					if(*args != '\0') {
-						ret = sscanf(args, "%d", &coreid);
-						if(ret != 1) {
-							fprintf(stderr, "warning: invalid core id (%s) ignored", args);
-							break;
-						}
-					}
-
-					core = get_core(coreid);
-					bidx += snprintf(buf + bidx, size - 1 - bidx, "%d %%", core);
-
+					bidx += format_core(buf + bidx, size - 1 - bidx, args);
 					break;
 				case 'H':
-					if(*args != '\0')
-						thermal = args;
-
-					temp = get_temp(thermal);
-					bidx += snprintf(buf + bidx, size - 1 - bidx, "%d °C", temp);
-
+					bidx += format_temp(buf + bidx, size - 1 - bidx, args);
 					break;
 				case 'M':
-					mem = get_mem();
-					bidx += format_unit(buf + bidx, size - 1 - bidx, mem, mem_units, sizeof(mem_units));
-
+					bidx += format_mem(buf + bidx, size - 1 - bidx, args);
 					break;
 				case 'V':
-					arg = args;
-					if(*arg != '\0') {
-						card = arg;
-
-						arg = strchr(arg, ':');
-						if(arg != NULL) {
-							selement = arg + 1;
-
-							arg = strchr(arg + 1, ':');
-							if(arg != NULL)
-								mutestr = arg + 1;
-						}
-					}
-
-					vol = get_vol(card, selement);
-					if(vol / 1000)
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "%s", mutestr);
-					else
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "%d %%", vol % 101);
-
+					bidx += format_vol(buf + bidx, size - 1 - bidx, args);
 					break;
 				case 'W':
-					arg = args;
-					if(*arg != '\0') {
-						iface = arg;
-
-						arg = strchr(arg, ':');
-						if(arg != NULL)
-							offstr = arg + 1;
-					}
-
-					off = get_wlan(iface, ssid, sizeof(ssid));
-					if(off)
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "%s", offstr);
-					else
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "%s", ssid);
-
+					bidx += format_wlan(buf + bidx, size - 1 - bidx, args);
 					break;
 				case 'E':
-					if(*args != '\0')
-						power = args;
-
-					batt = get_batt(power);
-					if(batt / 1000)
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "^%d %%", batt - 1000);
-					else
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "%d %%", batt);
-
+					bidx += format_batt(buf + bidx, size - 1 - bidx, args);
 					break;
 				case 'D':
-					arg = args;
-					if(*arg != '\0') {
-						tz = arg;
-
-						arg = strchr(arg, ':');
-						if(arg != NULL)
-							fmt = arg + 1;
-					}
-
-					bad = get_time(time, sizeof(time), fmt, tz);
-					if(bad)
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "%s", "none");
-					else
-						bidx += snprintf(buf + bidx, size - 1 - bidx, "%s", time);
-
+					bidx += format_time(buf + bidx, size - 1 - bidx, args);
 					break;
 				default:
 					memcpy(buf + bidx, format + fidx, last - fidx + 1);
