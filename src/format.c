@@ -67,7 +67,7 @@ void format(char * buf, size_t size, const char * format) {
 
 	len = strlen(format);
 
-	for(fidx = 0, bidx = 0; fidx < len && bidx < size - 1; fidx++) {
+	for(bidx = 0, fidx = 0; bidx < size - 1 && fidx < len; fidx++) {
 		if(format[fidx] == '%' && fidx + 1 < len && format[fidx + 1] == '{') {
 			ret = sscanf(format + fidx, "%%{%c%63[^}]}", &cmd, args);
 
@@ -183,8 +183,8 @@ void format(char * buf, size_t size, const char * format) {
 
 					break;
 				default:
-					memcpy(buf + bidx, format + fidx, last - fidx);
-					bidx += last - fidx;
+					memcpy(buf + bidx, format + fidx, last - fidx + 1);
+					bidx += last - fidx + 1;
 					break;
 			}
 
