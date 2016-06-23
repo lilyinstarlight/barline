@@ -2,8 +2,14 @@
 #define WLAN_H
 #include <stddef.h>
 
-bool win_enabled(wlan_t * wlan);
-void win_ssid(wlan_t * wlan, char * buf, size_t size);
+typedef struct {
+	// parameters
+	const char * iface;
+} wlan_t;
 
-size_t wlan_format(const char * wlan, char * buf, size_t size);
+bool wlan_enabled(wlan_t * wlan);
+void wlan_ssid(wlan_t * wlan, char * buf, size_t size);
+
+void wlan_parse(const char * wlan, wlan_t * wlan);
+size_t wlan_format(const wlan_t * wlan, char * buf, size_t size);
 #endif

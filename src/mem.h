@@ -2,9 +2,15 @@
 #define MEM_H
 #include <stddef.h>
 
-int mem_total(mem_t * mem);
-int mem_available(mem_t * mem);
-int mem_used(mem_t * mem);
+typedef struct {
+	// parameters
+	enum { TOTAL, AVAILABLE, USED } value;
+} mem_t;
 
-size_t mem_format(const char * mem, char * buf, size_t size);
+int mem_total();
+int mem_available();
+int mem_used();
+
+void mem_parse(const char * mem, mem_t * mem);
+size_t mem_format(const mem_t * mem, char * buf, size_t size);
 #endif
