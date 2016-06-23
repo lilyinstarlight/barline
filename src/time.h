@@ -11,5 +11,6 @@ typedef struct {
 void time_current(time_t * time, char * buf, size_t size);
 
 void time_parse(const char * time, time_t * time);
+int time_poll(const time_t * time);
 size_t time_format(const time_t * time, char * buf, size_t size);
 #endif
