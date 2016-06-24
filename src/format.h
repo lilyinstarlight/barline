@@ -2,6 +2,8 @@
 #define FORMAT_H
 #include <stddef.h>
 
+#include "widget.h"
+
 typedef struct {
 	widget_t * widgets;
 } format_t;

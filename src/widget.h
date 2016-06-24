@@ -1,12 +1,24 @@
 #ifndef WIDGET_H
 #define WIDGET_H
+#include <stddef.h>
+
+#include "batt.h"
+#include "cpu.h"
+#include "mem.h"
+#include "temp.h"
+#include "timedate.h"
+#include "vol.h"
+#include "win.h"
+#include "wlan.h"
+#include "work.h"
+
 typedef struct widget {
 	enum {
 		BATT,
 		CPU,
 		MEM,
 		TEMP,
-		TIME,
+		TIMEDATE,
 		VOL,
 		WIN,
 		WLAN,
@@ -18,7 +30,7 @@ typedef struct widget {
 		cpu_t * cpu;
 		mem_t * mem;
 		temp_t * temp;
-		time_t * time;
+		timedate_t * timedate;
 		vol_t * vol;
 		win_t * win;
 		wlan_t * wlan;
@@ -28,7 +40,7 @@ typedef struct widget {
 	int fd;
 } widget_t;
 
-void widget_parse(const char * widget, widget_t * widget);
+void widget_parse(const char * fmt, widget_t * widget);
 int widget_poll(const widget_t * widget);
 size_t widget_format(const widget_t * widget, char * buf, size_t size);
 #endif
