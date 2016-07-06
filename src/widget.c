@@ -1,3 +1,5 @@
+#include "widget.h"
+
 void widget_parse(const char * fmt, widget_t * widget) {
 }
 

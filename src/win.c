@@ -1,3 +1,5 @@
+#include "win.h"
+
 int win_current(win_t * win) {
 }
 

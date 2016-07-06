@@ -1,3 +1,5 @@
+#include "format.h"
+
 format_t * format_load(const char * fmt) {
 }
 

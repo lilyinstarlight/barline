@@ -1,3 +1,5 @@
+#include "work.h"
+
 int work_count(work_t * work) {
 }
 

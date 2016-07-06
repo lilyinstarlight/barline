@@ -1,3 +1,5 @@
+#include "config.h"
+
 config_t * config_load(const char * filename) {
 }
 
