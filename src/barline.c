@@ -31,7 +31,7 @@ void reload_config(int signum) {
 
 	format_new = format_load(config_new->fmt);
 	if (format_new == NULL) {
-		config_free(config_new)
+		config_free(config_new);
 		return;
 	}
 
