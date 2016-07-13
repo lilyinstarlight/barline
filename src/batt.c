@@ -8,7 +8,7 @@ int batt_percent(batt_t * batt) {
 
 	long full, now;
 
-	snprintf(path, sizeof(path), "/sys/class/power_supply/%s/energy_full", batt);
+	snprintf(path, sizeof(path), "/sys/class/power_supply/%s/energy_full", batt->name);
 
 	file = fopen(path, "r");
 	if (file == NULL)
@@ -21,7 +21,7 @@ int batt_percent(batt_t * batt) {
 	if (ret != 1)
 		return -1;
 
-	snprintf(path, sizeof(path), "/sys/class/power_supply/%s/energy_now", batt);
+	snprintf(path, sizeof(path), "/sys/class/power_supply/%s/energy_now", batt->name);
 
 	file = fopen(path, "r");
 	if (file == NULL)
@@ -47,7 +47,7 @@ bool batt_charging(batt_t * batt) {
 
 	bool charging;
 
-	snprintf(path, sizeof(path), "/sys/class/power_supply/%s/status", batt);
+	snprintf(path, sizeof(path), "/sys/class/power_supply/%s/status", batt->name);
 
 	file = fopen(path, "r");
 	if (file == NULL)

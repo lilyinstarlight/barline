@@ -4,6 +4,8 @@ bool wlan_enabled(wlan_t * wlan) {
 	int iwsock;
 	struct iwreq iwreq;
 
+	char ssid;
+
 	int ret;
 
 	bool enabled;
@@ -13,9 +15,9 @@ bool wlan_enabled(wlan_t * wlan) {
 	if (iwsock < 0)
 		return -2;
 
-	strncpy(iwreq.ifr_name, iface, IFNAMSIZ);
-	iwreq.u.essid.pointer = NULL;
-	iwreq.u.essid.length = 0;
+	strncpy(iwreq.ifr_name, wlan->iface, IFNAMSIZ);
+	iwreq.u.essid.pointer = &ssid;
+	iwreq.u.essid.length = 1;
 
 	ret = ioctl(iwsock, SIOCGIWESSID, &iwreq);
 	if (ret < 0)
@@ -39,7 +41,7 @@ void wlan_ssid(wlan_t * wlan, char * buf, size_t size) {
 	if (iwsock < 0)
 		return -2;
 
-	strncpy(iwreq.ifr_name, iface, IFNAMSIZ);
+	strncpy(iwreq.ifr_name, wlan->iface, IFNAMSIZ);
 	iwreq.u.essid.pointer = buf;
 	iwreq.u.essid.length = size - 1;
 

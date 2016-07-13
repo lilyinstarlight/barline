@@ -10,13 +10,13 @@ int vol_percent(vol_t * vol) {
 
 	snd_mixer_open(&mixer, 1);
 
-	snd_mixer_attach(mixer, card);
+	snd_mixer_attach(mixer, vol->card);
 	snd_mixer_selem_register(mixer, NULL, NULL);
 	snd_mixer_load(mixer);
 
 	snd_mixer_selem_id_alloca(&sid);
 	snd_mixer_selem_id_set_index(sid, 0);
-	snd_mixer_selem_id_set_name(sid, selement);
+	snd_mixer_selem_id_set_name(sid, vol->selem);
 
 	element = snd_mixer_find_selem(mixer, sid);
 
@@ -41,13 +41,13 @@ bool vol_mute(vol_t * vol) {
 
 	snd_mixer_open(&mixer, 1);
 
-	snd_mixer_attach(mixer, card);
+	snd_mixer_attach(mixer, vol->card);
 	snd_mixer_selem_register(mixer, NULL, NULL);
 	snd_mixer_load(mixer);
 
 	snd_mixer_selem_id_alloca(&sid);
 	snd_mixer_selem_id_set_index(sid, 0);
-	snd_mixer_selem_id_set_name(sid, selement);
+	snd_mixer_selem_id_set_name(sid, vol->selem);
 
 	element = snd_mixer_find_selem(mixer, sid);
 
