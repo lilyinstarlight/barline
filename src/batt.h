@@ -5,7 +5,7 @@
 
 typedef struct {
 	// parameters
-	const char * name;
+	char name[64];
 	int warn;
 } batt_t;
 

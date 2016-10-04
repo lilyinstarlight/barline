@@ -66,10 +66,35 @@ bool batt_charging(batt_t * batt) {
 }
 
 void batt_parse(const char * fmt, batt_t * batt) {
+	int ret = sscanf(fmt, "%63s:%d", &batt->name, &batt->warn);
+
+	if (ret == 0) {
+		batt->name = "BAT0";
+		batt->warn = -1;
+	}
+	else if (ret == 1) {
+		batt->warn = -1;
+	}
 }
 
 int batt_poll(const batt_t * batt) {
+	return -1;
 }
 
 size_t batt_format(const batt_t * batt, char * buf, size_t size) {
+	int percent = batt_percent(batt);
+	bool charging = batt_charging(batt);
+
+	if (percent < batt->warn) {
+		if (charging)
+			snprintf(buf, size, "%%{!u}^%d %%%%{!u}", percent);
+		else
+			snprintf(buf, size, "%%{!u}%d %%%%{!u}", percent);
+	}
+	else {
+		if (charging)
+			snprintf(buf, size, "^%d %%", percent);
+		else
+			snprintf(buf, size, "%d %%", percent);
+	}
 }

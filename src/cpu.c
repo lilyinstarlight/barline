@@ -41,10 +41,26 @@ int cpu_percent(cpu_t * cpu) {
 }
 
 void cpu_parse(const char * fmt, cpu_t * cpu) {
+	int ret = sscanf(fmt, "%d:%d", &cpu->idx, &cpu->warn);
+
+	if (ret == 0) {
+		cpu->idx = -1;
+		cpu->warn = 101;
+	}
+	else if (ret == 1) {
+		cpu->warn = 101;
+	}
 }
 
 int cpu_poll(const cpu_t * cpu) {
+	return -1;
 }
 
 size_t cpu_format(const cpu_t * cpu, char * buf, size_t size) {
+	int percent = cpu_percent(cpu);
+
+	if (percent >= cpu->warn)
+		snprintf(buf, size, "%%{!u}%d %%%%{!u}", percent);
+	else
+		snprintf(buf, size, "%d %%", percent);
 }

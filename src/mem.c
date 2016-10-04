@@ -64,10 +64,57 @@ int mem_used() {
 }
 
 void mem_parse(const char * fmt, mem_t * mem) {
+	char type;
+
+	int ret = sscanf(fmt, "%c:%f", &type, &mem->warn);
+
+	if (ret == 0) {
+		mem->value = USED;
+		mem->warn = 0.85;
+	}
+	else if (ret == 1) {
+		mem->value = type == 'T' ? TOTAL : type == 'A' ? AVAILABLE : USED;
+		mem->warn = 0.85;
+	}
+	else {
+		mem->value = type == 'T' ? TOTAL : type == 'A' ? AVAILABLE : USED;
+	}
 }
 
 int mem_poll(const mem_t * mem) {
+	return -1;
 }
 
 size_t mem_format(const mem_t * mem, char * buf, size_t size) {
+	int total = mem_total();
+
+	int value;
+
+	if (mem->value == TOTAL)
+		value = total;
+	else if (mem->value == AVAILABLE)
+		value = mem_available();
+	else
+		value = mem_used()
+
+	float ratio = (float)value / (float)total;
+
+	bool warn = false;
+
+	if (mem->value == USED)
+		warn = ratio > mem->warn;
+	else
+		warn = ratio < mem->warn;
+
+	int unit = 0;
+
+	while (value > 800 && unit < units_len) {
+		value >>= 10;
+		unit++;
+	}
+
+	if (warn)
+		snprintf(buf, size, "%%{!u}%.1f %s%%{!u}", value, units[unit]);
+	else
+		snprintf(buf, size, "%.1f %s", value, units[unit]);
 }
