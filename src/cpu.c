@@ -52,7 +52,7 @@ void cpu_parse(const char * fmt, cpu_t * cpu) {
 	}
 }
 
-int cpu_poll(const cpu_t * cpu) {
+int cpu_poll(cpu_t * cpu) {
 	return -1;
 }
 

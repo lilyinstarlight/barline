@@ -77,7 +77,7 @@ void batt_parse(const char * fmt, batt_t * batt) {
 	}
 }
 
-int batt_poll(const batt_t * batt) {
+int batt_poll(batt_t * batt) {
 	return -1;
 }
 

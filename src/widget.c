@@ -34,7 +34,7 @@ void widget_parse(const char * fmt, widget_t * widget) {
 	}
 }
 
-int widget_poll(const widget_t * widget) {
+int widget_poll(widget_t * widget) {
 	switch (widget->type) {
 		case BATT:
 			return batt_poll(widget->data.batt);

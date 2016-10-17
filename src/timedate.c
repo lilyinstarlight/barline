@@ -26,7 +26,7 @@ void timedate_parse(const char * fmt, timedate_t * timedate) {
 	}
 }
 
-int timedate_poll(const timedate_t * timedate) {
+int timedate_poll(timedate_t * timedate) {
 	return -1;
 }
 

@@ -81,7 +81,7 @@ void mem_parse(const char * fmt, mem_t * mem) {
 	}
 }
 
-int mem_poll(const mem_t * mem) {
+int mem_poll(mem_t * mem) {
 	return -1;
 }
 

@@ -36,7 +36,7 @@ void temp_parse(const char * fmt, temp_t * temp) {
 	}
 }
 
-int temp_poll(const temp_t * temp) {
+int temp_poll(temp_t * temp) {
 	return -1;
 }
 

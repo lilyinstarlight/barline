@@ -59,7 +59,7 @@ void wlan_parse(const char * fmt, wlan_t * wlan) {
 		batt->iface = "wlan0";
 }
 
-int wlan_poll(const wlan_t * wlan) {
+int wlan_poll(wlan_t * wlan) {
 	return -1;
 }
 

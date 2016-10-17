@@ -73,7 +73,7 @@ void vol_parse(const char * fmt, vol_t * vol) {
 	}
 }
 
-int vol_poll(const vol_t * vol) {
+int vol_poll(vol_t * vol) {
 	return -1;
 }
 
