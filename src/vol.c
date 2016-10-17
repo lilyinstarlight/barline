@@ -62,10 +62,27 @@ bool vol_mute(vol_t * vol) {
 }
 
 void vol_parse(const char * fmt, vol_t * vol) {
+	int ret = sscanf(fmt, "%63s:%63s", vol->card, vol->selem);
+
+	if (ret == 0) {
+		vol->card = "default";
+		vol->selem = "Master";
+	}
+	else if (ret == 1) {
+		vol->selem = "Master";
+	}
 }
 
 int vol_poll(const vol_t * vol) {
+	return -1;
 }
 
 size_t vol_format(const vol_t * vol, char * buf, size_t size) {
+	int percent = vol_percent(vol);
+	bool mute = vol_mute(vol);
+
+	if (mute)
+		snprintf(buf, size, "mute");
+	else
+		snprintf(buf, size, "%d %%", percent);
 }

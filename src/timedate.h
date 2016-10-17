@@ -4,8 +4,8 @@
 
 typedef struct {
 	// parameters
-	const char * fmt;
-	const char * tz;
+	char tz[64];
+	char fmt[64];
 } timedate_t;
 
 void timedate_current(timedate_t * timedate, char * buf, size_t size);

@@ -4,7 +4,7 @@
 
 typedef struct {
 	// parameters
-	const char * iface;
+	char iface[64];
 } wlan_t;
 
 bool wlan_enabled(wlan_t * wlan);

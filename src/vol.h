@@ -5,8 +5,8 @@
 
 typedef struct {
 	// parameters
-	const char * card;
-	const char * selem;
+	char card[64];
+	char selem[64];
 } vol_t;
 
 int vol_percent(vol_t * vol);

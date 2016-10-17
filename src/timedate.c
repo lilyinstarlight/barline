@@ -15,10 +15,25 @@ void timedate_current(timedate_t * timedate, char * buf, size_t size) {
 }
 
 void timedate_parse(const char * fmt, timedate_t * timedate) {
+	int ret = sscanf(fmt, "%63s:%63s", timedate->tz, timedate->fmt);
+
+	if (ret == 0) {
+		timedate->tz = "";
+		timedate->fmt = "%R";
+	}
+	else if (ret == 1) {
+		timedate->fmt = "%R";
+	}
 }
 
 int timedate_poll(const timedate_t * timedate) {
+	return -1;
 }
 
 size_t timedate_format(const timedate_t * timedate, char * buf, size_t size) {
+	char tdbuf[64];
+
+	timedate_current(timedate, tdbuf, sizeof(tdbuf));
+
+	snprintf(buf, size, "%s", tdbuf);
 }
