@@ -1,4 +1,5 @@
 The MIT License (MIT)
+=====================
 
 Copyright (c) 2016, Foster McLane <fkmclane@gmail.com>
 
