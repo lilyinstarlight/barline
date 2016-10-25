@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <unistd.h>
 
 #include "bspwm.h"
@@ -35,4 +34,22 @@ int bspwm_subscribe(const char * events) {
 		// exec bspc
 		execlp("bspc", "subscribe", events, (char *)NULL);
 	}
+}
+
+int bspwm_readline(int bspwmfd, char * buf, size_t size) {
+	char * pos = buf;
+
+	do {
+		if (pos == buf + size - 1)
+			break;
+
+		read(bspwmfd, pos, 1);
+		pos++;
+	}
+	while (*pos != '\n' && *pos != EOF);
+
+	if (pos != buf)
+		*pos = '\0';
+
+	return pos - buf;
 }
