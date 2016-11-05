@@ -6,6 +6,7 @@
 #include "cpu.h"
 #include "mem.h"
 #include "temp.h"
+#include "text.h"
 #include "timedate.h"
 #include "vol.h"
 #include "win.h"
@@ -18,6 +19,7 @@ typedef struct widget {
 		CPU,
 		MEM,
 		TEMP,
+		TEXT,
 		TIMEDATE,
 		VOL,
 		WIN,
@@ -30,6 +32,7 @@ typedef struct widget {
 		cpu_t * cpu;
 		mem_t * mem;
 		temp_t * temp;
+		text_t * text;
 		timedate_t * timedate;
 		vol_t * vol;
 		win_t * win;
@@ -40,6 +43,7 @@ typedef struct widget {
 	int fd;
 } widget_t;
 
+void widget_text(const char * text, widget_t * widget);
 void widget_parse(const char * fmt, widget_t * widget);
 int widget_poll(widget_t * widget);
 size_t widget_format(const widget_t * widget, char * buf, size_t size);

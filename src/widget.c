@@ -1,6 +1,12 @@
 #include "widget.h"
 
+void widget_text(const char * text, widget_t * widget) {
+	widget_parse(text, widget->data.text);
+}
+
 void widget_parse(const char * fmt, widget_t * widget) {
+	char text[256];
+
 	switch (fmt[0]) {
 		case 'E':
 			batt_parse(fmt + 1, widget->data.batt);
@@ -30,6 +36,8 @@ void widget_parse(const char * fmt, widget_t * widget) {
 			work_parse(fmt + 1, widget->data.work);
 			return;
 		default:
+			snprintf(text, sizeof(text) - 1, "%%{%s}", fmt);
+			widget_text(text, widget);
 			return;
 	}
 }
@@ -42,6 +50,8 @@ int widget_poll(widget_t * widget) {
 			return cpu_poll(widget->data.cpu);
 		case MEM:
 			return mem_poll(widget->data.mem);
+		case TEXT:
+			return text_poll(widget->data.text);
 		case TEMP:
 			return temp_poll(widget->data.temp);
 		case TIMEDATE:
@@ -67,6 +77,8 @@ size_t widget_format(const widget_t * widget, char * buf, size_t size) {
 			return cpu_format(widget->data.cpu, buf, size);
 		case MEM:
 			return mem_format(widget->data.mem, buf, size);
+		case TEXT:
+			return text_format(widget->data.text, buf, size);
 		case TEMP:
 			return temp_format(widget->data.temp, buf, size);
 		case TIMEDATE:
