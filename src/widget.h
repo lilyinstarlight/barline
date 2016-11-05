@@ -28,16 +28,16 @@ typedef struct widget {
 	} type;
 
 	union {
-		batt_t * batt;
-		cpu_t * cpu;
-		mem_t * mem;
-		temp_t * temp;
-		text_t * text;
-		timedate_t * timedate;
-		vol_t * vol;
-		win_t * win;
-		wlan_t * wlan;
-		work_t * work;
+		batt_t batt;
+		cpu_t cpu;
+		mem_t mem;
+		temp_t temp;
+		text_t text;
+		timedate_t timedate;
+		vol_t vol;
+		win_t win;
+		wlan_t wlan;
+		work_t work;
 	} data;
 
 	int fd;

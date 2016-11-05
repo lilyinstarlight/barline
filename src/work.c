@@ -23,7 +23,7 @@ int work_count(work_t * work, char * bspwmline) {
 			count++;
 		}
 		else if (work->value == ACTIVE) {
-			if (ctrl == 'o' || ctrl == 'O')
+			if (ctrl == 'O' || ctrl == 'o' || ctrl == 'F')
 				count++;
 		}
 		else if (work->value == CURRENT) {
@@ -82,7 +82,7 @@ void work_active(work_t * work, char * bspwmline, char ** vector, size_t inner, 
 		if (ctrl == 'L')
 			break;
 
-		if (ctrl == 'O' || ctrl == 'o') {
+		if (ctrl == 'O' || ctrl == 'o' || ctrl == 'F') {
 			snprintf(vector[idx], inner, "%s", buf);
 			idx++;
 		}
