@@ -7,6 +7,7 @@
 #include "format.h"
 
 char fname[256];
+char * monitor;
 config_t * config;
 format_t * format;
 
@@ -42,10 +43,21 @@ void reload_config(int signum) {
 	format = format_new;
 }
 
-int main(void) {
+int main(int argc, char * argv[]) {
 	char * dir;
 
 	char buf[256];
+
+	if (argc != 1 && argc != 2) {
+		fprintf(stderr, "Usage: %s [monitor]", argv[0]);
+
+		return 1;
+	}
+
+	if (argc == 2)
+		monitor = argv[1];
+	else
+		monitor = "";
 
 	setvbuf(stdout, NULL, _IOLBF, 0);
 
