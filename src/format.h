@@ -5,6 +5,7 @@
 #include "widget.h"
 
 typedef struct {
+	unsigned int num_widgets;
 	widget_t * widgets;
 } format_t;
 
