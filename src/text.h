@@ -4,7 +4,7 @@
 typedef struct {
 	// parameters
 	char text[256];
-} temp_t;
+} text_t;
 
 void text_parse(const char * fmt, text_t * text);
 int text_poll(text_t * text);
