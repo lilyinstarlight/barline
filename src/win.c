@@ -1,8 +1,7 @@
+#include "barline.h"
 #include "bspwm.h"
 
 #include "win.h"
-
-// TODO: read bspwm line and compare monitor against it to determine if we need to call win_current
 
 void win_current(win_t * win, char * bspwmline, char * buf, size_t size) {
 	if (strlen(win->monitor) > 0) {
@@ -38,7 +37,7 @@ void win_parse(const char * fmt, win_t * win) {
 	int ret = sscanf(fmt, "%63s", win->monitor);
 
 	if (ret == 0)
-		win->monitor = "";
+		win->monitor = monitor;
 
 	win->bspwmfd = -1;
 	win->xcb = NULL;

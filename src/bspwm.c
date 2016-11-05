@@ -53,3 +53,69 @@ int bspwm_readline(int bspwmfd, char * buf, size_t size) {
 
 	return pos - buf;
 }
+
+int bspwm_next(char ** report) {
+	char * pos = *report;
+
+	while (*pos != ':') {
+		if (*pos == '\0')
+			return;
+
+		pos++;
+	}
+
+	pos++;
+
+	int chars = pos - *report;
+
+	*report = pos;
+
+	return chars;
+}
+
+int bspwm_monitor(char ** report, const char * monitor) {
+	char * pos = *report;
+
+	if (strlen(monitor) > 0) {
+		char buf[64];
+
+		buf[0] = '\0';
+
+		do {
+			while (*pos != 'M' && *pos != 'm') {
+				bspwm_next(&pos);
+
+				if (*pos == '\0')
+					return -1;
+			}
+
+			pos++;
+
+			sscanf(pos, "%63[^:]", buf);
+		}
+		while(strcmp(buf, monitor) != 0);
+	}
+	else {
+		while (*pos != 'M') {
+			bspwm_next(&pos);
+
+			if (*pos == '\0')
+				return -1;
+		}
+	}
+
+	while (*pos != ':') {
+		if (*pos == '\0')
+			return -1;
+
+		pos++;
+	}
+
+	pos++;
+
+	int chars = pos - *report;
+
+	*report = pos;
+
+	return chars;
+}
