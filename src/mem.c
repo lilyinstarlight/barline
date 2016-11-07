@@ -1,4 +1,10 @@
+#include <stdbool.h>
+#include <stdio.h>
+
 #include "mem.h"
+
+const char * units[] = {"B", "KiB", "MiB", "GiB"};
+size_t units_len = sizeof(units)/sizeof(units[0]);
 
 int mem_total() {
 	FILE * file;
@@ -68,7 +74,7 @@ void mem_parse(const char * fmt, mem_t * mem) {
 
 	int ret = sscanf(fmt, "%c:%f", &type, &mem->warn);
 
-	if (ret == 0) {
+	if (ret <= 0) {
 		mem->value = USED;
 		mem->warn = 0.85;
 	}
@@ -85,17 +91,17 @@ int mem_poll(mem_t * mem) {
 	return -1;
 }
 
-size_t mem_format(const mem_t * mem, char * buf, size_t size) {
+size_t mem_format(mem_t * mem, char * buf, size_t size) {
 	int total = mem_total();
 
-	int value;
+	float value;
 
 	if (mem->value == TOTAL)
 		value = total;
 	else if (mem->value == AVAILABLE)
 		value = mem_available();
 	else
-		value = mem_used()
+		value = mem_used();
 
 	float ratio = (float)value / (float)total;
 
@@ -106,15 +112,19 @@ size_t mem_format(const mem_t * mem, char * buf, size_t size) {
 	else
 		warn = ratio < mem->warn;
 
-	int unit = 0;
+	size_t unit = 0;
 
 	while (value > 800 && unit < units_len) {
-		value >>= 10;
+		value /= 1024;
 		unit++;
 	}
 
+	size_t chars;
+
 	if (warn)
-		snprintf(buf, size, "%%{!u}%.1f %s%%{!u}", value, units[unit]);
+		chars = snprintf(buf, size, "%%{!u}%.1f %s%%{!u}", value, units[unit]);
 	else
-		snprintf(buf, size, "%.1f %s", value, units[unit]);
+		chars = snprintf(buf, size, "%.1f %s", value, units[unit]);
+
+	return chars;
 }

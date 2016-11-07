@@ -1,4 +1,8 @@
 #include <stdlib.h>
+#include <string.h>
+
+#include "barline.h"
+#include "bspwm.h"
 
 #include "work.h"
 
@@ -36,6 +40,8 @@ int work_count(work_t * work, char * bspwmline) {
 
 		bspwm_next(&pos);
 	}
+
+	return count;
 }
 
 void work_all(work_t * work, char * bspwmline, char ** vector, size_t inner, size_t size) {
@@ -51,7 +57,7 @@ void work_all(work_t * work, char * bspwmline, char ** vector, size_t inner, siz
 
 	bspwm_monitor(&pos, work->monitor);
 
-	for (int idx = 0; idx < size; idx++) {
+	for (size_t idx = 0; idx < size; idx++) {
 		sscanf(pos, "%c%63[^:]", &ctrl, buf);
 
 		if (ctrl == 'L')
@@ -76,7 +82,7 @@ void work_active(work_t * work, char * bspwmline, char ** vector, size_t inner, 
 
 	bspwm_monitor(&pos, work->monitor);
 
-	for (int idx = 0; idx < size;) {
+	for (size_t idx = 0; idx < size;) {
 		sscanf(pos, "%c%63[^:]", &ctrl, buf);
 
 		if (ctrl == 'L')
@@ -104,7 +110,7 @@ void work_current(work_t * work, char * bspwmline, char * current, size_t size) 
 
 	bspwm_monitor(&pos, work->monitor);
 
-	for (int idx = 0; idx < size;) {
+	for (size_t idx = 0; idx < size;) {
 		sscanf(pos, "%c%63[^:]", &ctrl, buf);
 
 		if (ctrl == 'L')
@@ -124,19 +130,19 @@ void work_parse(const char * fmt, work_t * work) {
 
 	int ret = sscanf(fmt, "%c:%63s:%63s", &type, work->separator, work->monitor);
 
-	if (ret == 0) {
+	if (ret <= 0) {
 		work->value = ACTIVE;
-		work->separator = "  ";
-		work->monitor = monitor;
+		strncpy(work->separator, "  ", sizeof(work->separator));
+		strncpy(work->monitor, monitor, sizeof(work->monitor));
 	}
 	else if (ret == 1) {
 		work->value = type == 'C' ? COUNT : type == 'A' ? ALL : type == 'T' ? ACTIVE : CURRENT;
-		work->separator = "  ";
-		work->monitor = monitor;
+		strncpy(work->separator, "  ", sizeof(work->separator));
+		strncpy(work->monitor, monitor, sizeof(work->monitor));
 	}
 	else if (ret == 2) {
 		work->value = type == 'C' ? COUNT : type == 'A' ? ALL : type == 'T' ? ACTIVE : CURRENT;
-		work->monitor = monitor;
+		strncpy(work->monitor, monitor, sizeof(work->monitor));
 	}
 	else if (ret == 3) {
 		work->value = type == 'C' ? COUNT : type == 'A' ? ALL : type == 'T' ? ACTIVE : CURRENT;
@@ -152,43 +158,47 @@ int work_poll(work_t * work) {
 	return work->bspwmfd;
 }
 
-size_t work_format(const work_t * work, char * buf, size_t size) {
+size_t work_format(work_t * work, char * buf, size_t size) {
 	char current[64];
 
 	char bspwmline[256];
 
-	bspwm_readline(win->bspwmfd, bspwmline, sizeof(bspwmline));
+	bspwm_readline(work->bspwmfd, bspwmline, sizeof(bspwmline));
 
-	int count = work_count(work);
+	int count = work_count(work, bspwmline);
+
+	size_t chars = 0;
 
 	if (work->value == COUNT) {
-		snprintf(buf, size, "%d", count);
+		chars = snprintf(buf, size, "%d", count);
 	}
 	else if (work->value == ALL) {
 		char ** vector = malloc(count*sizeof(current));
 
-		work_all(work, vector, sizeof(current), count);
+		work_all(work, bspwmline, vector, sizeof(current), count);
 
-		size -= snprintf(buf, size, "%s", vector[0]);
-		for (int work = 1; work < count; work++)
-			size -= snprintf(buf, size, "%s%s", work->separator, vector[work]);
+		chars += snprintf(buf, size - chars, "%s", vector[0]);
+		for (int ws = 1; ws < count; ws++)
+			chars += snprintf(buf, size - chars, "%s%s", work->separator, vector[ws]);
 
 		free(vector);
 	}
 	else if (work->value == ACTIVE) {
 		char ** vector = malloc(count*sizeof(current));
 
-		work_active(work, vector, sizeof(current), count);
+		work_active(work, bspwmline, vector, sizeof(current), count);
 
-		size -= snprintf(buf, size, "%s", vector[0]);
-		for (int work = 1; work < count; work++)
-			size -= snprintf(buf, size, "%s%s", work->separator, vector[work]);
+		chars += snprintf(buf, size - chars, "%s", vector[0]);
+		for (int ws = 1; ws < count; ws++)
+			chars += snprintf(buf, size - chars, "%s%s", work->separator, vector[ws]);
 
 		free(vector);
 	}
 	else if (work->value == CURRENT) {
-		work_current(work, current, sizeof(current));
+		work_current(work, bspwmline, current, sizeof(current));
 
-		snprintf(buf, size, "%s", *vector);
+		chars = snprintf(buf, size, "%s", current);
 	}
+
+	return chars;
 }

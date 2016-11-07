@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "barline.h"
 #include "bspwm.h"
 
@@ -5,7 +7,7 @@
 
 void win_current(win_t * win, char * bspwmline, char * buf, size_t size) {
 	if (strlen(win->monitor) > 0) {
-		char * _ = strtok(bspwmline, " ");
+		strtok(bspwmline, " ");
 		char * monitor = strtok(NULL, " ");
 
 		if (strcmp(monitor, win->monitor) != 0) {
@@ -30,14 +32,14 @@ void win_current(win_t * win, char * bspwmline, char * buf, size_t size) {
 		return;
 	}
 
-	snprintf(buf, size, "%*s", xcb_get_property_value_length(prop_reply), xcb_get_property_value(prop_reply));
+	snprintf(buf, size, "%*s", xcb_get_property_value_length(prop_reply), (char *)xcb_get_property_value(prop_reply));
 }
 
 void win_parse(const char * fmt, win_t * win) {
 	int ret = sscanf(fmt, "%63s", win->monitor);
 
-	if (ret == 0)
-		win->monitor = monitor;
+	if (ret <= 0)
+		strncpy(win->monitor, monitor, sizeof(win->monitor));
 
 	win->bspwmfd = -1;
 	win->xcb = NULL;
@@ -52,7 +54,7 @@ int win_poll(win_t * win) {
 	return win->bspwmfd;
 }
 
-size_t win_format(const win_t * win, char * buf, size_t size) {
+size_t win_format(win_t * win, char * buf, size_t size) {
 	char winbuf[64];
 
 	char bspwmline[256];
@@ -61,5 +63,9 @@ size_t win_format(const win_t * win, char * buf, size_t size) {
 
 	win_current(win, bspwmline, winbuf, sizeof(winbuf));
 
-	snprintf(buf, size, "%s", winbuf);
+	size_t chars;
+
+	chars = snprintf(buf, size, "%s", winbuf);
+
+	return chars;
 }

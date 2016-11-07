@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <string.h>
+
+#include <alsa/asoundlib.h>
+
 #include "vol.h"
 
 int vol_percent(vol_t * vol) {
@@ -6,7 +11,7 @@ int vol_percent(vol_t * vol) {
 	snd_mixer_elem_t * element;
 	long min, max;
 
-	long vol;
+	long volume;
 
 	snd_mixer_open(&mixer, 1);
 
@@ -25,11 +30,11 @@ int vol_percent(vol_t * vol) {
 
 	snd_mixer_selem_get_playback_volume_range(element, &min, &max);
 
-	snd_mixer_selem_get_playback_volume(element, SND_MIXER_SCHN_FRONT_LEFT, &vol);
+	snd_mixer_selem_get_playback_volume(element, SND_MIXER_SCHN_FRONT_LEFT, &volume);
 
 	snd_mixer_close(mixer);
 
-	return vol * 100 / max;
+	return (volume - min) * 100 / max;
 }
 
 bool vol_mute(vol_t * vol) {
@@ -37,7 +42,7 @@ bool vol_mute(vol_t * vol) {
 	snd_mixer_selem_id_t * sid;
 	snd_mixer_elem_t * element;
 
-	bool mute;
+	int mute;
 
 	snd_mixer_open(&mixer, 1);
 
@@ -64,12 +69,12 @@ bool vol_mute(vol_t * vol) {
 void vol_parse(const char * fmt, vol_t * vol) {
 	int ret = sscanf(fmt, "%63s:%63s", vol->card, vol->selem);
 
-	if (ret == 0) {
-		vol->card = "default";
-		vol->selem = "Master";
+	if (ret <= 0) {
+		strncpy(vol->card, "default", sizeof(vol->card));
+		strncpy(vol->selem, "Master", sizeof(vol->selem));
 	}
 	else if (ret == 1) {
-		vol->selem = "Master";
+		strncpy(vol->selem, "Master", sizeof(vol->selem));
 	}
 }
 
@@ -77,12 +82,16 @@ int vol_poll(vol_t * vol) {
 	return -1;
 }
 
-size_t vol_format(const vol_t * vol, char * buf, size_t size) {
+size_t vol_format(vol_t * vol, char * buf, size_t size) {
 	int percent = vol_percent(vol);
 	bool mute = vol_mute(vol);
 
+	size_t chars;
+
 	if (mute)
-		snprintf(buf, size, "mute");
+		chars = snprintf(buf, size, "mute");
 	else
-		snprintf(buf, size, "%d %%", percent);
+		chars = snprintf(buf, size, "%d %%", percent);
+
+	return chars;
 }

@@ -14,5 +14,5 @@ bool vol_mute(vol_t * vol);
 
 void vol_parse(const char * fmt, vol_t * vol);
 int vol_poll(vol_t * vol);
-size_t vol_format(const vol_t * vol, char * buf, size_t size);
+size_t vol_format(vol_t * vol, char * buf, size_t size);
 #endif

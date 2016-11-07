@@ -46,5 +46,5 @@ typedef struct widget {
 void widget_text(const char * text, widget_t * widget);
 void widget_parse(const char * fmt, widget_t * widget);
 int widget_poll(widget_t * widget);
-size_t widget_format(const widget_t * widget, char * buf, size_t size);
+size_t widget_format(widget_t * widget, char * buf, size_t size);
 #endif

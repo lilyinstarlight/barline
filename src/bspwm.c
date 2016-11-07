@@ -1,3 +1,4 @@
+#include <string.h>
 #include <unistd.h>
 
 #include "bspwm.h"
@@ -29,10 +30,13 @@ int bspwm_subscribe(const char * events) {
 		close(bspwm[0]);
 
 		// redirect stdout to the pipe
-		dup2(bspwm[1], stdout);
+		dup2(bspwm[1], 1);
 
 		// exec bspc
 		execlp("bspc", "subscribe", events, (char *)NULL);
+
+		// should not run
+		return -1;
 	}
 }
 
@@ -58,8 +62,10 @@ int bspwm_next(char ** report) {
 	char * pos = *report;
 
 	while (*pos != ':') {
-		if (*pos == '\0')
-			return;
+		if (*pos == '\0') {
+			pos--;
+			break;
+		}
 
 		pos++;
 	}

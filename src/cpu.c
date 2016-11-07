@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+
 #include "cpu.h"
 
 int cpu_percent(cpu_t * cpu) {
@@ -43,7 +46,7 @@ int cpu_percent(cpu_t * cpu) {
 void cpu_parse(const char * fmt, cpu_t * cpu) {
 	int ret = sscanf(fmt, "%d:%d", &cpu->idx, &cpu->warn);
 
-	if (ret == 0) {
+	if (ret <= 0) {
 		cpu->idx = -1;
 		cpu->warn = 101;
 	}
@@ -56,11 +59,15 @@ int cpu_poll(cpu_t * cpu) {
 	return -1;
 }
 
-size_t cpu_format(const cpu_t * cpu, char * buf, size_t size) {
+size_t cpu_format(cpu_t * cpu, char * buf, size_t size) {
 	int percent = cpu_percent(cpu);
 
+	size_t chars;
+
 	if (percent >= cpu->warn)
-		snprintf(buf, size, "%%{!u}%d %%%%{!u}", percent);
+		chars = snprintf(buf, size, "%%{!u}%d %%%%{!u}", percent);
 	else
-		snprintf(buf, size, "%d %%", percent);
+		chars = snprintf(buf, size, "%d %%", percent);
+
+	return chars;
 }

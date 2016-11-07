@@ -1,7 +1,12 @@
+#include <stdio.h>
+
 #include "widget.h"
 
 void widget_text(const char * text, widget_t * widget) {
-	widget_parse(text, &widget->data.text);
+	widget->type = TEXT;
+	text_parse(text, &widget->data.text);
+
+	widget->fd = widget_poll(widget);
 }
 
 void widget_parse(const char * fmt, widget_t * widget) {
@@ -11,44 +16,46 @@ void widget_parse(const char * fmt, widget_t * widget) {
 		case 'E':
 			widget->type = BATT;
 			batt_parse(fmt + 1, &widget->data.batt);
-			return;
+			break;
 		case 'C':
 			widget->type = CPU;
 			cpu_parse(fmt + 1, &widget->data.cpu);
-			return;
+			break;
 		case 'M':
 			widget->type = MEM;
 			mem_parse(fmt + 1, &widget->data.mem);
-			return;
+			break;
 		case 'P':
 			widget->type = TEMP;
 			temp_parse(fmt + 1, &widget->data.temp);
-			return;
+			break;
 		case 'D':
 			widget->type = TIMEDATE;
 			timedate_parse(fmt + 1, &widget->data.timedate);
-			return;
+			break;
 		case 'V':
 			widget->type = VOL;
 			vol_parse(fmt + 1, &widget->data.vol);
-			return;
+			break;
 		case 'N':
 			widget->type = WIN;
 			win_parse(fmt + 1, &widget->data.win);
-			return;
+			break;
 		case 'L':
 			widget->type = WLAN;
 			wlan_parse(fmt + 1, &widget->data.wlan);
-			return;
+			break;
 		case 'W':
 			widget->type = WORK;
 			work_parse(fmt + 1, &widget->data.work);
-			return;
+			break;
 		default:
 			snprintf(text, sizeof(text) - 1, "%%{%s}", fmt);
 			widget_text(text, widget);
 			return;
 	}
+
+	widget->fd = widget_poll(widget);
 }
 
 int widget_poll(widget_t * widget) {
@@ -78,7 +85,7 @@ int widget_poll(widget_t * widget) {
 	}
 }
 
-size_t widget_format(const widget_t * widget, char * buf, size_t size) {
+size_t widget_format(widget_t * widget, char * buf, size_t size) {
 	switch (widget->type) {
 		case BATT:
 			return batt_format(&widget->data.batt, buf, size);

@@ -12,11 +12,11 @@ typedef struct {
 } work_t;
 
 int work_count(work_t * work, char * bspwmline);
-void work_all(work_t * work, char * bspwmline, char ** vector, size_t size);
-void work_active(work_t * work, char * bspwmline, char ** vector, size_t size);
-void work_current(work_t * work, char * bspwmline, char * vector, size_t size);
+void work_all(work_t * work, char * bspwmline, char ** vector, size_t inner, size_t size);
+void work_active(work_t * work, char * bspwmline, char ** vector, size_t inner, size_t size);
+void work_current(work_t * work, char * bspwmline, char * current, size_t size);
 
 void work_parse(const char * fmt, work_t * work);
 int work_poll(work_t * work);
-size_t work_format(const work_t * work, char * buf, size_t size);
+size_t work_format(work_t * work, char * buf, size_t size);
 #endif

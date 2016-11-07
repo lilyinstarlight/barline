@@ -77,7 +77,12 @@ int main(int argc, char * argv[]) {
 	if (format == NULL)
 		return 1;
 
-	run = 1;
+	//run = 1;
+	run = 0;
+	for (size_t widget = 0; widget < format->num_widgets; widget++) {
+		widget_format(&format->widgets[widget], buf, sizeof(buf));
+		puts(buf);
+	}
 
 	signal(SIGINT, terminate);
 	signal(SIGTERM, terminate);

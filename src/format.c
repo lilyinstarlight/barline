@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "format.h"
 
 format_t * format_load(const char * fmt) {
@@ -5,7 +8,7 @@ format_t * format_load(const char * fmt) {
 	int idx = 0;
 
 	char buf[256];
-	int bufidx = 0;
+	size_t bufidx = 0;
 
 	format_t * format = malloc(sizeof(format_t));
 
@@ -19,11 +22,15 @@ format_t * format_load(const char * fmt) {
 			num++;
 
 			while(*pos != '}') {
-				if (*pos == '\0')
+				if (*pos == '\0') {
+					pos--;
 					break;
+				}
 
 				pos++;
 			}
+
+			pos++;
 		}
 		else {
 			bufidx++;
@@ -42,13 +49,14 @@ format_t * format_load(const char * fmt) {
 	format->widgets = malloc(format->num_widgets*sizeof(widget_t));
 
 	pos = fmt;
+	bufidx = 0;
 	while (*pos != '\0') {
 		if (*pos == '%') {
 			if (bufidx > 0) {
 				buf[bufidx] = '\0';
 				bufidx = 0;
 
-				widget_text(buf, &format->widgets[idx])
+				widget_text(buf, &format->widgets[idx]);
 
 				idx++;
 			}
@@ -60,11 +68,15 @@ format_t * format_load(const char * fmt) {
 			idx++;
 
 			while(*pos != '}') {
-				if (*pos == '\0')
+				if (*pos == '\0') {
+					pos--;
 					break;
+				}
 
 				pos++;
 			}
+
+			pos++;
 		}
 		else {
 			buf[bufidx] = *pos;
@@ -74,7 +86,7 @@ format_t * format_load(const char * fmt) {
 				buf[bufidx] = '\0';
 				bufidx = 0;
 
-				widget_text(buf, &format->widgets[idx])
+				widget_text(buf, &format->widgets[idx]);
 
 				idx++;
 			}
@@ -90,8 +102,7 @@ void format_poll(format_t * format, int timeout, char * buf, size_t size) {
 }
 
 void format_free(format_t * format) {
-	for (int widget = 0; widget < format->num_widgets; widget++)
-		free(format->widgets[widget]);
+	free(format->widgets);
 
 	free(format);
 }
