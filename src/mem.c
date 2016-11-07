@@ -3,7 +3,7 @@
 
 #include "mem.h"
 
-const char * units[] = {"B", "KiB", "MiB", "GiB"};
+const char * units[] = {"KiB", "MiB", "GiB"};
 size_t units_len = sizeof(units)/sizeof(units[0]);
 
 int mem_total() {

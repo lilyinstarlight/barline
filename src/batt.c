@@ -73,10 +73,10 @@ void batt_parse(const char * fmt, batt_t * batt) {
 
 	if (ret <= 0) {
 		strncpy(batt->name, "BAT0", sizeof(batt->name));
-		batt->warn = -1;
+		batt->warn = 12;
 	}
 	else if (ret == 1) {
-		batt->warn = -1;
+		batt->warn = 12;
 	}
 }
 

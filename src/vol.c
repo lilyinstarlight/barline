@@ -42,7 +42,7 @@ bool vol_mute(vol_t * vol) {
 	snd_mixer_selem_id_t * sid;
 	snd_mixer_elem_t * element;
 
-	int mute;
+	int on;
 
 	snd_mixer_open(&mixer, 1);
 
@@ -59,11 +59,11 @@ bool vol_mute(vol_t * vol) {
 	if (element == NULL)
 		return false;
 
-	snd_mixer_selem_get_playback_switch(element, SND_MIXER_SCHN_FRONT_LEFT, &mute);
+	snd_mixer_selem_get_playback_switch(element, SND_MIXER_SCHN_FRONT_LEFT, &on);
 
 	snd_mixer_close(mixer);
 
-	return mute;
+	return !on;
 }
 
 void vol_parse(const char * fmt, vol_t * vol) {

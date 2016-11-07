@@ -8,7 +8,6 @@ typedef struct {
 	char iface[64];
 } wlan_t;
 
-bool wlan_enabled(wlan_t * wlan);
 void wlan_ssid(wlan_t * wlan, char * buf, size_t size);
 
 void wlan_parse(const char * fmt, wlan_t * wlan);

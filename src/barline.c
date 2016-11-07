@@ -78,11 +78,13 @@ int main(int argc, char * argv[]) {
 		return 1;
 
 	//run = 1;
+	//TODO
 	run = 0;
 	for (size_t widget = 0; widget < format->num_widgets; widget++) {
 		widget_format(&format->widgets[widget], buf, sizeof(buf));
-		puts(buf);
+		printf("%s", buf);
 	}
+	printf("\n");
 
 	signal(SIGINT, terminate);
 	signal(SIGTERM, terminate);

@@ -18,7 +18,7 @@ int bspwm_subscribe(const char * events) {
 	if (ret < 0)
 		return -1;
 
-	if (ret == 0) {
+	if (ret > 0) {
 		// close write end of bspwm
 		close(bspwm[1]);
 
@@ -33,7 +33,7 @@ int bspwm_subscribe(const char * events) {
 		dup2(bspwm[1], 1);
 
 		// exec bspc
-		execlp("bspc", "subscribe", events, (char *)NULL);
+		execlp("bspc", "bspc", "subscribe", events, (char *)NULL);
 
 		// should not run
 		return -1;
