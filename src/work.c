@@ -69,7 +69,10 @@ void work_all(work_t * work, char * vector, size_t inner, size_t size) {
 		if (ctrl == 'L')
 			break;
 
-		snprintf(vector + idx*inner, inner, "%s", buf);
+		if (ctrl == 'O' || ctrl == 'F')
+			snprintf(vector + idx*inner, inner, "%%{!u}%s%%{!u}", buf);
+		else
+			snprintf(vector + idx*inner, inner, "%s", buf);
 
 		bspwm_next(&pos);
 	}
@@ -97,7 +100,11 @@ void work_active(work_t * work, char * vector, size_t inner, size_t size) {
 		if (ctrl == 'L')
 			break;
 
-		if (ctrl == 'O' || ctrl == 'o' || ctrl == 'F') {
+		if (ctrl == 'O' || ctrl == 'F') {
+			snprintf(vector + idx*inner, inner, "%%{!u}%s%%{!u}", buf);
+			idx++;
+		}
+		else if (ctrl == 'o') {
 			snprintf(vector + idx*inner, inner, "%s", buf);
 			idx++;
 		}
