@@ -69,7 +69,7 @@ bool batt_charging(batt_t * batt) {
 }
 
 void batt_parse(const char * fmt, batt_t * batt) {
-	int ret = sscanf(fmt, "%63s:%d", batt->name, &batt->warn);
+	int ret = sscanf(fmt, "%63[^:]:%d", batt->name, &batt->warn);
 
 	if (ret <= 0) {
 		strncpy(batt->name, "BAT0", sizeof(batt->name));

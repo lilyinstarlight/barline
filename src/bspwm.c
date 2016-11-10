@@ -1,5 +1,9 @@
+#include <poll.h>
+#include <signal.h>
 #include <string.h>
 #include <unistd.h>
+
+#include <sys/wait.h>
 
 #include "bspwm.h"
 
@@ -40,20 +44,99 @@ int bspwm_subscribe(const char * events) {
 	}
 }
 
-int bspwm_readline(int bspwmfd, char * buf, size_t size) {
-	char * pos = buf;
+void bspwm_id(enum bspwm_domain domain, const char * name, char * buf, size_t size) {
+	int bspwm[2];
 
-	do {
-		if (pos == buf + size - 1)
-			break;
+	int ret;
 
-		read(bspwmfd, pos, 1);
-		pos++;
+	ret = pipe(bspwm);
+
+	if (ret < 0) {
+		buf[0] = '\0';
+		return;
 	}
-	while (*pos != '\n' && *pos != EOF);
 
-	if (pos != buf)
-		*pos = '\0';
+	ret = fork();
+
+	if (ret < 0) {
+		buf[0] = '\0';
+		return;
+	}
+
+	if (ret > 0) {
+		size_t chars;
+
+		// clear buffer by default
+		buf[0] = '\0';
+
+		// close write end of bspwm
+		close(bspwm[1]);
+
+		// wait for child to die
+		waitpid(ret, NULL, 0);
+
+		// read the buffer from the child
+		chars = read(bspwm[0], buf, size);
+
+		// remove newline and null terminate buffer
+		buf[chars - 1] = '\0';
+	}
+	else {
+		// close read end of bspwm
+		close(bspwm[0]);
+
+		// redirect stdout to the pipe
+		dup2(bspwm[1], 1);
+
+		const char * sel_flag, * dom_flag;
+		switch(domain) {
+			case NODE:
+				sel_flag = "-n";
+				dom_flag = "-N";
+				break;
+			case DESKTOP:
+				sel_flag = "-d";
+				dom_flag = "-D";
+				break;
+			case MONITOR:
+				sel_flag = "-m";
+				dom_flag = "-M";
+				break;
+		}
+
+		// exec bspc
+		execlp("bspc", "bspc", "query", sel_flag, name, dom_flag, (char *)NULL);
+	}
+}
+
+int bspwm_readline(int bspwmfd, char * buf, size_t size) {
+	int ret;
+
+	struct pollfd bspwmpoll = {.fd = bspwmfd, .events = POLLIN};
+
+	ret = poll(&bspwmpoll, 1, 0);
+
+	char * pos = buf;
+	while (ret > 0) {
+		pos = buf;
+
+		for(;;) {
+			if (pos == buf + size - 1)
+				break;
+
+			read(bspwmfd, pos, 1);
+
+			if (*pos == '\n' || *pos == EOF)
+				break;
+
+			pos++;
+		}
+
+		if (pos != buf)
+			*pos = '\0';
+
+		ret = poll(&bspwmpoll, 1, 0);
+	}
 
 	return pos - buf;
 }

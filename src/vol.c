@@ -67,7 +67,7 @@ bool vol_mute(vol_t * vol) {
 }
 
 void vol_parse(const char * fmt, vol_t * vol) {
-	int ret = sscanf(fmt, "%63s:%63s", vol->card, vol->selem);
+	int ret = sscanf(fmt, "%63[^:]:%63[^:]", vol->card, vol->selem);
 
 	if (ret <= 0) {
 		strncpy(vol->card, "default", sizeof(vol->card));

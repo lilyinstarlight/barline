@@ -8,13 +8,14 @@ typedef struct {
 	char separator[64];
 	char monitor[64];
 	// bspwm
+	char bspwmline[256];
 	int bspwmfd;
 } work_t;
 
-int work_count(work_t * work, char * bspwmline);
-void work_all(work_t * work, char * bspwmline, char ** vector, size_t inner, size_t size);
-void work_active(work_t * work, char * bspwmline, char ** vector, size_t inner, size_t size);
-void work_current(work_t * work, char * bspwmline, char * current, size_t size);
+int work_count(work_t * work);
+void work_all(work_t * work, char * vector, size_t inner, size_t size);
+void work_active(work_t * work, char * vector, size_t inner, size_t size);
+void work_current(work_t * work, char * current, size_t size);
 
 void work_parse(const char * fmt, work_t * work);
 int work_poll(work_t * work);

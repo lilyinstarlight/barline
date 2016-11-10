@@ -33,7 +33,7 @@ void wlan_ssid(wlan_t * wlan, char * buf, size_t size) {
 }
 
 void wlan_parse(const char * fmt, wlan_t * wlan) {
-	int ret = sscanf(fmt, "%63s", wlan->iface);
+	int ret = sscanf(fmt, "%63[^:]", wlan->iface);
 
 	if (ret <= 0)
 		strncpy(wlan->iface, "wlan0", sizeof(wlan->iface));

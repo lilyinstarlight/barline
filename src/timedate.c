@@ -20,7 +20,7 @@ void timedate_current(timedate_t * timedate, char * buf, size_t size) {
 }
 
 void timedate_parse(const char * fmt, timedate_t * timedate) {
-	int ret = sscanf(fmt, "%63s:%63s", timedate->tz, timedate->fmt);
+	int ret = sscanf(fmt, "%63[^:]:%63s", timedate->tz, timedate->fmt);
 
 	if (ret <= 0) {
 		strncpy(timedate->tz, "", sizeof(timedate->tz));

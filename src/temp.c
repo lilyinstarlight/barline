@@ -28,7 +28,7 @@ int temp_current(temp_t * temp) {
 }
 
 void temp_parse(const char * fmt, temp_t * temp) {
-	int ret = sscanf(fmt, "%63s:%d", temp->name, &temp->warn);
+	int ret = sscanf(fmt, "%63[^:]:%d", temp->name, &temp->warn);
 
 	if (ret <= 0) {
 		strncpy(temp->name, "thermal_zone0", sizeof(temp->name));
