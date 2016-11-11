@@ -70,9 +70,9 @@ void work_all(work_t * work, char * vector, size_t inner, size_t size) {
 			break;
 
 		if (ctrl == 'O' || ctrl == 'F')
-			snprintf(vector + idx*inner, inner, "%%{!u}%s%%{!u}", buf);
+			snprintf(vector + idx*inner, inner, "%%{R} %s %%{R}", buf);
 		else
-			snprintf(vector + idx*inner, inner, "%s", buf);
+			snprintf(vector + idx*inner, inner, " %s ", buf);
 
 		bspwm_next(&pos);
 	}
@@ -101,11 +101,11 @@ void work_active(work_t * work, char * vector, size_t inner, size_t size) {
 			break;
 
 		if (ctrl == 'O' || ctrl == 'F') {
-			snprintf(vector + idx*inner, inner, "%%{!u}%s%%{!u}", buf);
+			snprintf(vector + idx*inner, inner, "%%{R} %s %%{R}", buf);
 			idx++;
 		}
 		else if (ctrl == 'o') {
-			snprintf(vector + idx*inner, inner, "%s", buf);
+			snprintf(vector + idx*inner, inner, " %s ", buf);
 			idx++;
 		}
 
@@ -151,12 +151,12 @@ void work_parse(const char * fmt, work_t * work) {
 
 	if (ret <= 0) {
 		work->value = ACTIVE;
-		strncpy(work->separator, "  ", sizeof(work->separator));
+		strncpy(work->separator, "", sizeof(work->separator));
 		strncpy(work->monitor, monitor, sizeof(work->monitor));
 	}
 	else if (ret == 1) {
 		work->value = type == 'C' ? COUNT : type == 'A' ? ALL : type == 'T' ? ACTIVE : CURRENT;
-		strncpy(work->separator, "  ", sizeof(work->separator));
+		strncpy(work->separator, "", sizeof(work->separator));
 		strncpy(work->monitor, monitor, sizeof(work->monitor));
 	}
 	else if (ret == 2) {
