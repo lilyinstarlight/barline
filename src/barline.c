@@ -86,17 +86,10 @@ int main(int argc, char * argv[]) {
 	signal(SIGUSR1, reload_config);
 
 	while (run) {
-		//format_poll(format, config->poll, buf, sizeof(buf));
-		//TODO
-		for (size_t widget = 0; widget < format->num_widgets; widget++) {
-			widget_format(&format->widgets[widget], buf, sizeof(buf));
-			printf("%s", buf);
-		}
-		printf("\n");
-		sleep(1);
+		format_poll(format, config->poll, buf, sizeof(buf));
 
-		//if (puts(buf) < 0)
-		//	run = 0;
+		if (puts(buf) < 0)
+			run = 0;
 	}
 
 	format_free(format);
