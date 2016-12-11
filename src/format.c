@@ -100,24 +100,28 @@ format_t * format_load(const char * fmt) {
 }
 
 size_t format_poll(format_t * format, int timeout, char * buf, size_t size) {
-	unsigned int num_fds;
+	int nfds;
 	fd_set fds;
 
 	struct timeval tv;
 
-	num_fds = 0;
+	nfds = 0;
 	FD_ZERO(&fds);
 	for (size_t widget = 0; widget < format->num_widgets; widget++) {
-		if (format->widgets[widget].fd >= 0) {
-			num_fds += 1;
-			FD_SET(format->widgets[widget].fd, &fds);
+		int fd = format->widgets[widget].fd;
+
+		if (fd >= 0) {
+			if (fd >= nfds)
+				nfds = fd + 1;
+
+			FD_SET(fd, &fds);
 		}
 	}
 
 	tv.tv_sec = timeout;
 	tv.tv_usec = 0;
 
-	select(num_fds, &fds, NULL, NULL, &tv);
+	select(nfds, &fds, NULL, NULL, &tv);
 
 	size_t chars = 0;
 
