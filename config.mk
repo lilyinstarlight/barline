@@ -8,5 +8,5 @@ LDLIBS=-lasound -lxcb
 
 SRCDIR=src
 
-PREFIX?=$(DESTDIR)/usr/local
+PREFIX?=/usr/local
 BINDIR?=$(PREFIX)/bin

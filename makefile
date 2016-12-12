@@ -6,7 +6,7 @@ OBJECTS=$(SOURCES:.c=.o)
 all: $(BIN)
 
 install: all
-	install -D -s $(BIN) $(BINDIR)/$(BIN)
+	install -D -s $(BIN) $(DESTDIR)$(BINDIR)/$(BIN)
 
 uninstall:
 	-rm -f $(BINDIR)/$(BIN)
