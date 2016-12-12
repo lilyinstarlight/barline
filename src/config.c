@@ -35,7 +35,7 @@ config_t * config_load(const char * filename) {
 		if(ret == EOF)
 			break;
 		else if(ret != 2) {
-			fscanf(file, "%*[^\n]");
+			ret = fscanf(file, "%*[^\n]");
 			fprintf(stderr, "warning: invalid syntax (line %d) ignored\n", line);
 			continue;
 		}

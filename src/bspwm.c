@@ -102,6 +102,10 @@ void bspwm_id(enum bspwm_domain domain, const char * name, char * buf, size_t si
 				sel_flag = "-m";
 				dom_flag = "-M";
 				break;
+			default:
+				sel_flag = "-n";
+				dom_flag = "-N";
+				break;
 		}
 
 		// exec bspc
@@ -124,7 +128,10 @@ int bspwm_readline(int bspwmfd, char * buf, size_t size) {
 			if (pos == buf + size - 1)
 				break;
 
-			read(bspwmfd, pos, 1);
+			ret = read(bspwmfd, pos, 1);
+
+			if (ret < 0)
+				break;
 
 			if (*pos == '\n' || *pos == EOF)
 				break;
