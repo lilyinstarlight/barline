@@ -40,7 +40,7 @@ void win_current(win_t * win, char * buf, size_t size) {
 	char * name = xcb_get_property_value(prop_reply);
 
 	if (strcmp(name, "0") != 0)
-		snprintf(buf, size, "%*s", len, name);
+		snprintf(buf, size, "%.*s", len, name);
 
 	free(prop_reply);
 }
