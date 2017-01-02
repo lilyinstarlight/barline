@@ -92,6 +92,8 @@ int main(int argc, char * argv[]) {
 			run = 0;
 	}
 
+	kill(0, SIGTERM);
+
 	format_free(format);
 	config_free(config);
 }
