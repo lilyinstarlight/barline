@@ -5,6 +5,7 @@
 
 #include "config.h"
 #include "format.h"
+#include "bspwm.h"
 
 char fname[256];
 char * monitor;
@@ -92,8 +93,7 @@ int main(int argc, char * argv[]) {
 			run = 0;
 	}
 
-	kill(0, SIGTERM);
-
+	bspwm_close();
 	format_free(format);
 	config_free(config);
 }

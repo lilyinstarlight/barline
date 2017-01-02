@@ -1,11 +1,20 @@
 #include <poll.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include <sys/wait.h>
 
 #include "bspwm.h"
+
+struct bspwm_pid {
+	int pid;
+	struct bspwm_pid * next;
+};
+
+struct bspwm_pid seed = {0, NULL};
+struct bspwm_pid * bspwm_pids = &seed;
 
 int bspwm_subscribe(const char * events) {
 	int bspwm[2];
@@ -25,6 +34,14 @@ int bspwm_subscribe(const char * events) {
 	if (ret > 0) {
 		// close write end of bspwm
 		close(bspwm[1]);
+
+		// add pid to list
+		struct bspwm_pid * pid = bspwm_pids;
+		while (pid->next != NULL)
+			pid = pid->next;
+		pid->next = malloc(sizeof(struct bspwm_pid));
+		pid->next->pid = ret;
+		pid->next->next = NULL;
 
 		// return the read end
 		return bspwm[0];
@@ -214,4 +231,22 @@ int bspwm_monitor(char ** report, const char * monitor) {
 	*report = pos;
 
 	return chars;
+}
+
+void bspwm_close() {
+	// skip first pid
+	struct bspwm_pid * pid = bspwm_pids->next;
+	struct bspwm_pid * next = pid;
+
+	while (pid != NULL) {
+		// kill process
+		kill(pid->pid, SIGTERM);
+
+		// free pid
+		next = pid->next;
+		free(pid);
+
+		// go to next pid
+		pid = next;
+	}
 }
