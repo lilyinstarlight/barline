@@ -138,7 +138,7 @@ int bspwm_readline(int bspwmfd, char * buf, size_t size) {
 	ret = poll(&bspwmpoll, 1, 0);
 
 	char * pos = buf;
-	while (ret > 0) {
+	while (ret > 0 && bspwmpoll.revents != POLLHUP) {
 		pos = buf;
 
 		for(;;) {
@@ -147,7 +147,7 @@ int bspwm_readline(int bspwmfd, char * buf, size_t size) {
 
 			ret = read(bspwmfd, pos, 1);
 
-			if (ret < 0)
+			if (ret <= 0)
 				break;
 
 			if (*pos == '\n' || *pos == EOF)

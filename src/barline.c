@@ -8,11 +8,12 @@
 #include "bspwm.h"
 
 char fname[256];
-char * monitor;
-config_t * config;
-format_t * format;
 
-int run;
+char * monitor = "";
+config_t * config = NULL;
+format_t * format = NULL;
+
+int run = 0;
 
 void terminate(int signum) {
 	(void)signum;
@@ -83,6 +84,7 @@ int main(int argc, char * argv[]) {
 	signal(SIGINT, terminate);
 	signal(SIGTERM, terminate);
 	signal(SIGPIPE, terminate);
+	signal(SIGCHLD, terminate);
 
 	signal(SIGUSR1, reload_config);
 
