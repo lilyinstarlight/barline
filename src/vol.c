@@ -76,6 +76,8 @@ void vol_parse(const char * fmt, vol_t * vol) {
 	else if (ret == 1) {
 		strncpy(vol->selem, "Master", sizeof(vol->selem));
 	}
+
+	vol_percent(vol);
 }
 
 int vol_poll(vol_t * vol) {
