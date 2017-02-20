@@ -233,6 +233,23 @@ int bspwm_monitor(char ** report, const char * monitor) {
 	return chars;
 }
 
+int bspwm_check(pid_t child_pid) {
+	// skip first pid
+	struct bspwm_pid * pid = bspwm_pids->next;
+
+	while (pid != NULL) {
+		// check if process found
+		if (pid->pid == child_pid)
+			return 1;
+
+		// go to next pid
+		pid = pid->next;
+	}
+
+	// pid not found
+	return 0;
+}
+
 void bspwm_close() {
 	// skip first pid
 	struct bspwm_pid * pid = bspwm_pids->next;

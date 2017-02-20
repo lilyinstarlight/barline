@@ -1,6 +1,8 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #include "config.h"
@@ -19,6 +21,22 @@ void terminate(int signum) {
 	(void)signum;
 
 	run = 0;
+}
+
+void check(int signum) {
+	(void)signum;
+
+	for(;;) {
+		pid_t pid = waitpid(-1, NULL, WNOHANG);
+
+		if (pid <= 0)
+			break;
+
+		if (bspwm_check(pid)) {
+			terminate(signum);
+			break;
+		}
+	}
 }
 
 void reload_config(int signum) {
@@ -84,7 +102,8 @@ int main(int argc, char * argv[]) {
 	signal(SIGINT, terminate);
 	signal(SIGTERM, terminate);
 	signal(SIGPIPE, terminate);
-	signal(SIGCHLD, terminate);
+
+	signal(SIGCHLD, check);
 
 	signal(SIGUSR1, reload_config);
 
