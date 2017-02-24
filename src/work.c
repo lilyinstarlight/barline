@@ -21,6 +21,9 @@ int work_count(work_t * work) {
 	bspwm_monitor(&pos, work->monitor);
 
 	for (;;) {
+		if (*pos == '\0')
+			return -1;
+
 		sscanf(pos, "%c%*63[^:]", &ctrl);
 
 		if (ctrl == 'L')
@@ -64,6 +67,9 @@ void work_all(work_t * work, char * vector, size_t inner, size_t size) {
 	bspwm_monitor(&pos, work->monitor);
 
 	for (size_t idx = 0; idx < size; idx++) {
+		if (*pos == '\0')
+			return;
+
 		sscanf(pos, "%c%63[^:]", &ctrl, buf);
 
 		if (ctrl == 'L')
@@ -95,6 +101,9 @@ void work_active(work_t * work, char * vector, size_t inner, size_t size) {
 	bspwm_monitor(&pos, work->monitor);
 
 	for (size_t idx = 0; idx < size;) {
+		if (*pos == '\0')
+			return;
+
 		sscanf(pos, "%c%63[^:]", &ctrl, buf);
 
 		if (ctrl == 'L')
@@ -130,6 +139,9 @@ void work_current(work_t * work, char * current, size_t size) {
 	bspwm_monitor(&pos, work->monitor);
 
 	for (size_t idx = 0; idx < size;) {
+		if (*pos == '\0')
+			return;
+
 		sscanf(pos, "%c%63[^:]", &ctrl, buf);
 
 		if (ctrl == 'L')
@@ -181,7 +193,12 @@ int work_poll(work_t * work) {
 size_t work_format(work_t * work, char * buf, size_t size) {
 	char current[64];
 
-	bspwm_readline(work->bspwmfd, work->bspwmline, sizeof(work->bspwmline));
+	int ret;
+
+	ret = bspwm_readline(work->bspwmfd, work->bspwmline, sizeof(work->bspwmline));
+
+	if (ret < 0)
+		return 0;
 
 	int count = work_count(work);
 

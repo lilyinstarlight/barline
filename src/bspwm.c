@@ -148,7 +148,7 @@ int bspwm_readline(int bspwmfd, char * buf, size_t size) {
 			ret = read(bspwmfd, pos, 1);
 
 			if (ret <= 0)
-				break;
+				return -1;
 
 			if (*pos == '\n' || *pos == EOF)
 				break;
@@ -167,6 +167,9 @@ int bspwm_readline(int bspwmfd, char * buf, size_t size) {
 
 int bspwm_next(char ** report) {
 	char * pos = *report;
+
+	if (*pos == '\0')
+		return 0;
 
 	while (*pos != ':') {
 		if (*pos == '\0') {
@@ -203,6 +206,9 @@ int bspwm_monitor(char ** report, const char * monitor) {
 			}
 
 			pos++;
+
+			if (*pos == '\0')
+				return -1;
 
 			sscanf(pos, "%63[^:]", buf);
 		}

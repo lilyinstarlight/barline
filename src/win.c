@@ -71,7 +71,12 @@ int win_poll(win_t * win) {
 size_t win_format(win_t * win, char * buf, size_t size) {
 	char winbuf[64];
 
-	bspwm_readline(win->bspwmfd, win->bspwmline, sizeof(win->bspwmline));
+	int ret;
+
+	ret = bspwm_readline(win->bspwmfd, win->bspwmline, sizeof(win->bspwmline));
+
+	if (ret < 0)
+		return 0;
 
 	win_current(win, winbuf, sizeof(winbuf));
 
