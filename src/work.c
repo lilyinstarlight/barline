@@ -33,11 +33,11 @@ int work_count(work_t * work) {
 			count++;
 		}
 		else if (work->value == ACTIVE) {
-			if (ctrl == 'O' || ctrl == 'o' || ctrl == 'F')
+			if (ctrl == 'O' || ctrl == 'o' || ctrl == 'U' || ctrl == 'u' || ctrl == 'F')
 				count++;
 		}
 		else if (work->value == CURRENT) {
-			if (ctrl == 'O')
+			if (ctrl == 'O' || ctrl == 'U')
 				count++;
 		}
 		else {
@@ -75,7 +75,7 @@ void work_all(work_t * work, char * vector, size_t inner, size_t size) {
 		if (ctrl == 'L')
 			break;
 
-		if (ctrl == 'O' || ctrl == 'F')
+		if (ctrl == 'O' || ctrl == 'U' || ctrl == 'F')
 			snprintf(vector + idx*inner, inner, "%%{R} %s %%{R}", buf);
 		else
 			snprintf(vector + idx*inner, inner, " %s ", buf);
@@ -109,11 +109,11 @@ void work_active(work_t * work, char * vector, size_t inner, size_t size) {
 		if (ctrl == 'L')
 			break;
 
-		if (ctrl == 'O' || ctrl == 'F') {
+		if (ctrl == 'O' || ctrl == 'U' || ctrl == 'F') {
 			snprintf(vector + idx*inner, inner, "%%{R} %s %%{R}", buf);
 			idx++;
 		}
-		else if (ctrl == 'o') {
+		else if (ctrl == 'o' || ctrl == 'u') {
 			snprintf(vector + idx*inner, inner, " %s ", buf);
 			idx++;
 		}
@@ -147,7 +147,7 @@ void work_current(work_t * work, char * current, size_t size) {
 		if (ctrl == 'L')
 			break;
 
-		if (ctrl == 'O') {
+		if (ctrl == 'O' || ctrl == 'U') {
 			snprintf(current, size, "%s", buf);
 			return;
 		}
