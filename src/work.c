@@ -75,8 +75,12 @@ void work_all(work_t * work, char * vector, size_t inner, size_t size) {
 		if (ctrl == 'L')
 			break;
 
-		if (ctrl == 'O' || ctrl == 'U' || ctrl == 'F')
+		if (ctrl == 'O'|| ctrl == 'F')
 			snprintf(vector + idx*inner, inner, "%%{R} %s %%{R}", buf);
+		else if (ctrl == 'U')
+			snprintf(vector + idx*inner, inner, "%%{R} %%{!u}%s%%{!u} %%{R}", buf);
+		else if (ctrl == 'u')
+			snprintf(vector + idx*inner, inner, " %%{!u}%s%%{!u} ", buf);
 		else
 			snprintf(vector + idx*inner, inner, " %s ", buf);
 
@@ -109,11 +113,19 @@ void work_active(work_t * work, char * vector, size_t inner, size_t size) {
 		if (ctrl == 'L')
 			break;
 
-		if (ctrl == 'O' || ctrl == 'U' || ctrl == 'F') {
+		if (ctrl == 'O' || ctrl == 'F') {
 			snprintf(vector + idx*inner, inner, "%%{R} %s %%{R}", buf);
 			idx++;
 		}
-		else if (ctrl == 'o' || ctrl == 'u') {
+		else if (ctrl == 'U') {
+			snprintf(vector + idx*inner, inner, "%%{R} %%{!u}%s%%{!u} %%{R}", buf);
+			idx++;
+		}
+		else if (ctrl == 'u') {
+			snprintf(vector + idx*inner, inner, " %%{!u}%s%%{!u} ", buf);
+			idx++;
+		}
+		else if (ctrl == 'o') {
 			snprintf(vector + idx*inner, inner, " %s ", buf);
 			idx++;
 		}
@@ -147,8 +159,12 @@ void work_current(work_t * work, char * current, size_t size) {
 		if (ctrl == 'L')
 			break;
 
-		if (ctrl == 'O' || ctrl == 'U') {
+		if (ctrl == 'O') {
 			snprintf(current, size, "%s", buf);
+			return;
+		}
+		else if (ctrl == 'U') {
+			snprintf(current, size, "%%{!u}%s%%{!u}", buf);
 			return;
 		}
 
