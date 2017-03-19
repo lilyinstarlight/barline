@@ -22,14 +22,14 @@ poll 1
 
 Blocks are delimited by `%{` and `}` and are formatted with the first parameter right after the block type and further parameters separated by `:`. Any number of trailing parameters are optional and are assumed to be the default. Unknown blocks are passed directly to lemonbar.
 
- Block           | Value              | Parameters                                                                    | Default
------------------|--------------------|-------------------------------------------------------------------------------|--------------------------------
- <pre>%{E}</pre> | Battery Percentage | name, warn (percentage low)                                                   | <pre>%{EBAT0:12}</pre>
- <pre>%{C}</pre> | CPU Percentage     | index (-1 means all CPUs), warn (percentage high)                             | <pre>%{C-1:101}</pre>
- <pre>%{M}</pre> | Memory Usage       | type ('U' = used, 'A' = available, 'T' = total), warn (percentage high)       | <pre>%{MU:0.85}</pre>
- <pre>%{P}</pre> | Temperature        | name, warn (value high)                                                       | <pre>%{Pthermal_zone0:-1}</pre>
- <pre>%{D}</pre> | Time and Date      | timezone, format (strftime format)                                            | <pre>%{D:%R}</pre>
- <pre>%{V}</pre> | Time and Date      | card, simple element                                                          | <pre>%{Vdefault:Master}</pre>
- <pre>%{N}</pre> | Window Title       | monitor                                                                       | <pre>%{N}</pre>
- <pre>%{L}</pre> | Wireless Network   | interface                                                                     | <pre>%{Lwlan0}</pre>
- <pre>%{W}</pre> | bspwm Workspaces   | type ('T' = active, 'A' = all, 'U' = current, 'C' = count, separator, monitor | <pre>%{WT::}</pre>
+ Block   | Value              | Parameters                                                                    | Default
+---------|--------------------|-------------------------------------------------------------------------------|-----------------------
+ `%{E}`  | Battery Percentage | name, warn (percentage low)                                                   | `%{EBAT0:12}`
+ `%{C}`  | CPU Percentage     | index (-1 means all CPUs), warn (percentage high)                             | `%{C-1:101}`
+ `%{M}`  | Memory Usage       | type ('U' = used, 'A' = available, 'T' = total), warn (percentage high)       | `%{MU:0.85}`
+ `%{P}`  | Temperature        | name, warn (value high)                                                       | `%{Pthermal_zone0:-1}`
+ `%{D}`  | Time and Date      | timezone, format (strftime format)                                            | `%{D:%R}`
+ `%{V}`  | Time and Date      | card, simple element                                                          | `%{Vdefault:Master}`
+ `%{N}`  | Window Title       | monitor                                                                       | `%{N}`
+ `%{L}`  | Wireless Network   | interface                                                                     | `%{Lwlan0}`
+ `%{W}`  | bspwm Workspaces   | type ('T' = active, 'A' = all, 'U' = current, 'C' = count, separator, monitor | `%{WT::}`
