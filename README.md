@@ -22,14 +22,14 @@ poll 1
 
 Blocks are delimited by `%{` and `}` and are formatted with the first parameter right after the block type and further parameters separated by `:`. Any number of trailing parameters are optional and are assumed to be the default. Unknown blocks are passed directly to lemonbar.
 
- Block                                       | Value              | Parameters                                                                    | Default
----------------------------------------------|--------------------|-------------------------------------------------------------------------------|-----------------------------------------------------------
- <code style="white-space: pre">%{E}</code>  | Battery Percentage | name, warn (percentage low)                                                   | <code style="white-space: pre">%{EBAT0:12}</code>
- <code style="white-space: pre">%{C}</code>  | CPU Percentage     | index (-1 means all CPUs), warn (percentage high)                             | <code style="white-space: pre">%{C-1:101}</code>
- <code style="white-space: pre">%{M}</code>  | Memory Usage       | type ('U' = used, 'A' = available, 'T' = total), warn (percentage high)       | <code style="white-space: pre">%{MU:0.85}</code>
- <code style="white-space: pre">%{P}</code>  | Temperature        | name, warn (value high)                                                       | <code style="white-space: pre">%{Pthermal_zone0:-1}</code>
- <code style="white-space: pre">%{D}</code>  | Time and Date      | timezone, format (strftime format)                                            | <code style="white-space: pre">%{D:%R}</code>
- <code style="white-space: pre">%{V}</code>  | Time and Date      | card, simple element                                                          | <code style="white-space: pre">%{Vdefault:Master}</code>
- <code style="white-space: pre">%{N}</code>  | Window Title       | monitor                                                                       | <code style="white-space: pre">%{N}</code>
- <code style="white-space: pre">%{L}</code>  | Wireless Network   | interface                                                                     | <code style="white-space: pre">%{Lwlan0}</code>
- <code style="white-space: pre">%{W}</code>  | bspwm Workspaces   | type ('T' = active, 'A' = all, 'U' = current, 'C' = count, separator, monitor | <code style="white-space: pre">%{WT::}</code>
+ Block           | Value              | Parameters                                                                    | Default
+-----------------|--------------------|-------------------------------------------------------------------------------|--------------------------------
+ <pre>%{E}</pre> | Battery Percentage | name, warn (percentage low)                                                   | <pre>%{EBAT0:12}</pre>
+ <pre>%{C}</pre> | CPU Percentage     | index (-1 means all CPUs), warn (percentage high)                             | <pre>%{C-1:101}</pre>
+ <pre>%{M}</pre> | Memory Usage       | type ('U' = used, 'A' = available, 'T' = total), warn (percentage high)       | <pre>%{MU:0.85}</pre>
+ <pre>%{P}</pre> | Temperature        | name, warn (value high)                                                       | <pre>%{Pthermal_zone0:-1}</pre>
+ <pre>%{D}</pre> | Time and Date      | timezone, format (strftime format)                                            | <pre>%{D:%R}</pre>
+ <pre>%{V}</pre> | Time and Date      | card, simple element                                                          | <pre>%{Vdefault:Master}</pre>
+ <pre>%{N}</pre> | Window Title       | monitor                                                                       | <pre>%{N}</pre>
+ <pre>%{L}</pre> | Wireless Network   | interface                                                                     | <pre>%{Lwlan0}</pre>
+ <pre>%{W}</pre> | bspwm Workspaces   | type ('T' = active, 'A' = all, 'U' = current, 'C' = count, separator, monitor | <pre>%{WT::}</pre>
