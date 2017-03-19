@@ -22,6 +22,13 @@ poll 1
 
 Blocks are delimited by `%{` and `}` and are formatted with the first parameter right after the block type and further parameters separated by `:`. Any number of trailing parameters are optional and are assumed to be the default. Unknown blocks are passed directly to lemonbar.
 
+<div>
+<style scoped>
+code {
+	white-space: pre;
+}
+</style>
+
  Block   | Value              | Parameters                                                                    | Default
 ---------|--------------------|-------------------------------------------------------------------------------|-----------------------
  `%{E}`  | Battery Percentage | name, warn (percentage low)                                                   | `%{EBAT0:12}`
@@ -33,3 +40,5 @@ Blocks are delimited by `%{` and `}` and are formatted with the first parameter 
  `%{N}`  | Window Title       | monitor                                                                       | `%{N}`
  `%{L}`  | Wireless Network   | interface                                                                     | `%{Lwlan0}`
  `%{W}`  | bspwm Workspaces   | type ('T' = active, 'A' = all, 'U' = current, 'C' = count, separator, monitor | `%{WT::}`
+
+</div>
