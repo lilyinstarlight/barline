@@ -64,7 +64,7 @@ size_t cpu_format(cpu_t * cpu, char * buf, size_t size) {
 
 	size_t chars;
 
-	if (percent >= cpu->warn)
+	if (cpu->warn > 0 && percent >= cpu->warn)
 		chars = snprintf(buf, size, "%%{!u}%d %%%%{!u}", percent);
 	else
 		chars = snprintf(buf, size, "%d %%", percent);
