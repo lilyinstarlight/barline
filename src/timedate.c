@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,17 +7,22 @@
 #include "timedate.h"
 
 void timedate_current(timedate_t * timedate, char * buf, size_t size) {
+	bool tzset;
 	time_t rtime;
 	struct tm * itime;
 
-	setenv("TZ", timedate->tz, 1);
+	tzset = strcmp(timedate->tz, "") != 0;
+
+	if (tzset)
+		setenv("TZ", timedate->tz, 1);
 
 	rtime = time(NULL);
 	itime = localtime(&rtime);
 
 	strftime(buf, size, timedate->fmt, itime);
 
-	unsetenv("TZ");
+	if (tzset)
+		unsetenv("TZ");
 }
 
 void timedate_parse(const char * fmt, timedate_t * timedate) {

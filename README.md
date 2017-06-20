@@ -28,8 +28,8 @@ Blocks are delimited by `%{` and `}` and are formatted with the first parameter 
  `%{C}`  | CPU Percentage     | index (-1 means all CPUs), warn (percentage high)                              | `%{C-1:101}`
  `%{M}`  | Memory Usage       | type ('U' = used, 'A' = available, 'T' = total), warn (percentage high)        | `%{MU:0.85}`
  `%{P}`  | Temperature        | name, warn (value high)                                                        | `%{Pthermal_zone0:-1}`
- `%{D}`  | Time and Date      | timezone, format (strftime format)                                             | `%{D:%R}`
- `%{V}`  | Time and Date      | card, simple element                                                           | `%{Vdefault:Master}`
+ `%{D}`  | Time and Date      | timezone (empty for system setting), format (strftime format)                  | `%{D:%R}`
+ `%{V}`  | Volume             | card, simple element                                                           | `%{Vdefault:Master}`
  `%{N}`  | Window Title       | monitor                                                                        | `%{N}`
  `%{L}`  | Wireless Network   | interface                                                                      | `%{Lwlan0}`
  `%{W}`  | bspwm Workspaces   | type ('T' = active, 'A' = all, 'U' = current, 'C' = count), separator, monitor | `%{WT::}`
