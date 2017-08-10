@@ -66,7 +66,7 @@ void reload_config(int signum) {
 int main(int argc, char * argv[]) {
 	char * dir;
 
-	char buf[256];
+	char buf[4096];
 
 	if (argc != 1 && argc != 2) {
 		fprintf(stderr, "Usage: %s [monitor]", argv[0]);

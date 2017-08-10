@@ -18,6 +18,7 @@ format_t * format_load(const char * fmt) {
 		if (*pos == '%') {
 			if (bufidx > 0) {
 				num++;
+				bufidx = 0;
 			}
 
 			num++;
