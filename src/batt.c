@@ -5,7 +5,7 @@
 
 int batt_percent(batt_t * batt) {
 	FILE * file;
-	char path[64];
+	char path[256];
 
 	int ret;
 
@@ -42,7 +42,7 @@ int batt_percent(batt_t * batt) {
 
 bool batt_charging(batt_t * batt) {
 	FILE * file;
-	char path[64];
+	char path[256];
 
 	char status[12];
 

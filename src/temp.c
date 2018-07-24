@@ -5,7 +5,7 @@
 
 int temp_current(temp_t * temp) {
 	FILE * file;
-	char path[64];
+	char path[256];
 
 	int ret;
 
